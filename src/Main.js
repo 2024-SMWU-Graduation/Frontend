@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Nav from './components/Nav';
+import Footer from './components/Footer';
 //import App from './components/App';
 import HomePage from './pages/HomePage';
 import MyPage from './pages/MyPage';
@@ -19,7 +20,8 @@ function Main() {
           <Route path="register" element={<Register />} />
           <Route path="introduce" element={<Introduce />} />
           <Route path="question" element={<Question />} />
-          </Routes>
+        </Routes>
+        <Footer/>
     </BrowserRouter>
   );
 }

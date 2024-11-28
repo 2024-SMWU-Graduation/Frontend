@@ -1,0 +1,11 @@
+.main {
+  background: url(..//components/office.jpg);
+  background-position: center;
+  background-size: cover;
+  height: 1000px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+

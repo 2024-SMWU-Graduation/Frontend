@@ -16,6 +16,22 @@ function LogIn() {
   const [email, setEmail] = useState('');
   const [inputPw, setInputPw] = useState('')
 
+
+  /*
+  const onClickLogin = () => {
+    console.log('click login')
+  }
+  
+  useEffect(() => {
+    axios.get('/user_inform/login')
+    .then(res => console.log(res))
+    .catch()
+  },
+  // 페이지 호출 후 처음 한번만 호출될 수 있도록 [] 추가
+  [])
+
+  */
+
   return (
     <div>
       <div className = "page">
@@ -49,7 +65,7 @@ function LogIn() {
         <hr nonshade/>
         <div className="registerWrap">
           <div className="registerTitle">
-            계정이 없으신가요? <Link to="/resister">가입하기</Link>
+            계정이 없으신가요? <Link to="/register">가입하기</Link>
           </div>
         </div>
       </div>
