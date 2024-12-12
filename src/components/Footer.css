@@ -1,11 +1,12 @@
 
 .footer {
-  color: white;;
-  background-color: rgb(79, 102, 145);;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  color: darkslategray;;
+  background-color: #F8F9FA;;
+  padding-left: 15%;
+  padding-top: 30px;
+  padding-bottom: 30px;
   display: flex;
-  /*margin-top: auto;*/
+  font-family: "NoonnuBasicGothicRegular";
 }
 
 .left {
@@ -14,4 +15,5 @@
 
 .right {
   flex: 3;
+  padding-left: 40%;
 }

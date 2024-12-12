@@ -4,7 +4,7 @@ function Footer() {
   return (
     <div className="footer">
       <div className='left'>
-        <h1>AI 면접 도우미</h1>
+        <h2>AI 면접 도우미</h2>
       </div>
       <div className='right'>
         <div className='list'>
