@@ -1,0 +1,19 @@
+
+.wrapper {
+  height: 1000px;
+  font-family: "NoonnuBasicGothicRegular";
+}
+
+.intro {
+  padding-top: 30px;
+  margin-left: 30px;
+}
+
+.video {
+  padding-top: 30px;
+  margin-left: 30px;
+}
+
+.startBtn {
+  margin-right: 10px;
+}
