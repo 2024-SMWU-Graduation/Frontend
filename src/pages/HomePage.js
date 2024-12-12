@@ -6,8 +6,8 @@ function HomePage() {
   return (
     <div className="main">
       <h1>
-          This is HomePage
-        </h1>
+        
+      </h1>
     </div>
   );
 }

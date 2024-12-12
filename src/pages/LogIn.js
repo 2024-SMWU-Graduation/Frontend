@@ -41,7 +41,7 @@ function LogIn() {
 
         <div className = "contentWrap">
             <div className="inputTitle">
-                이메일 주소
+                이메일
             </div>
             <div className="inputWrap">
                 <input className="input"></input>
