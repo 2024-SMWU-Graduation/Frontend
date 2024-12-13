@@ -64,7 +64,7 @@ function Introduce() {
     <div>
       <div className='wrapper'>
         <h2 className='intro'>
-          카메라를 키고 1분간 자기소개를 녹화해주세요
+          카메라를 켜고 1분간 자기소개를 녹화해주세요
         </h2>
         <video className='webcam' ref={videoRef} />
         <div className='video'>
@@ -79,11 +79,11 @@ function Introduce() {
             </div>  
           )}
           />
-        <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} />
-        <button type="submit">분석 요청</button>
-        </form>
-        {result && <div>결과: {result}</div>}
+          <form onSubmit={handleSubmit} className='submit'>
+            <input type="file" onChange={handleFileChange} />
+            <button type="submit">분석 요청</button>
+          </form>
+          {result && <div>결과: {result}</div>}
         </div>
       </div>
     </div>

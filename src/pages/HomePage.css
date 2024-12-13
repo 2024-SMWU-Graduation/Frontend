@@ -1,8 +1,7 @@
-body {
+.home-background {
   margin: 0;
   font-family: "NoonnuBasicGothicRegular";
-  background: linear-gradient(to right, #003087, #99b6ec, #1e3a8a);
-  /* background: linear-gradient(to right, #1e3a8a, #6d28d9, #4c1d95); */
+  background: linear-gradient(to right, #003087, #28448f, #99b6ec, #003087);
   color: white;
 }
 
