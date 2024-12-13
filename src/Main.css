@@ -7,4 +7,12 @@
 
 .contentWrapper {
   flex: 1;
+  padding: 2rem
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 20px;
 }
