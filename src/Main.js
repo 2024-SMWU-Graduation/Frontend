@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './Main.css'
 import BasicExample from './components/Nav';
-import Footer from './components/Footer';
-//import App from './components/App';
+/*import Footer from './components/Footer';*/
 import HomePage from './pages/HomePage';
 import MyPage from './pages/MyPage';
 import LogIn from './pages/LogIn';
@@ -24,7 +23,6 @@ function Main() {
             <Route path="introduce" element={<Introduce />} />
             <Route path="question" element={<Question />} />
           </Routes>
-        <Footer/>
         </div>
       </div>
     </BrowserRouter>

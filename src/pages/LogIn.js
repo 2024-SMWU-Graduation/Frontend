@@ -34,7 +34,7 @@ function LogIn() {
     <div>
       <div className="warpper">
         <h2>
-          로그인 페이지
+          
         </h2>
         <div className = "page">
           <div className = "titleWrap">
