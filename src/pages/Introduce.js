@@ -26,6 +26,7 @@ function Introduce() {
     getUserCamera()
   },[videoRef])
 
+
   // 플라스크 연결
   const [file, setFile] = useState(null);
   const [result, setResult] = useState("");
@@ -40,21 +41,24 @@ function Introduce() {
     if (!file) return alert("파일을 선택하세요.");
 
     // 파일을 base64로 변환
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/analyze", {
-          image: reader.result, // base64 이미지 데이터 전달
-        });
+    
+    const formData = new FormData();
+    formData.append("file", file)
 
-        setResult(response.data.output);
-      } catch (error) {
-        console.error("에러 발생:", error);
-        alert("요청에 실패했습니다.");
-      }
-    };
+    try {
+      const response = await axios.post("http://localhost:8080/upload", formData, {
+        headers: {
+        "Content-type": "multipart/form-data",
+      },
+      });
+
+      setResult(response.data.output);
+    } catch (error) {
+      console.error("에러 발생:", error);
+      alert("요청에 실패했습니다.");
+    }
   };
+
 
   return (
     <div>
@@ -75,12 +79,12 @@ function Introduce() {
             </div>  
           )}
           />
-        </div>
         <form onSubmit={handleSubmit}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <input type="file" onChange={handleFileChange} />
         <button type="submit">분석 요청</button>
         </form>
         {result && <div>결과: {result}</div>}
+        </div>
       </div>
     </div>
   );

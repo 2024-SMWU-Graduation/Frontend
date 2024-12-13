@@ -4,9 +4,10 @@
   background-color: #F8F9FA;;
   padding-left: 15%;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 0;
   display: flex;
   font-family: "NoonnuBasicGothicRegular";
+  bottom: 0;
 }
 
 .left {
