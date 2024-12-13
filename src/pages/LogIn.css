@@ -1,10 +1,16 @@
-.page {
-  top:40%;
-  bottom : 40%;
-  width: 100% ;
-  max-width : 500px;
-  padding: 0 20px;
 
+.wrapper {
+  height: 1000px;
+  font-family: "NoonnuBasicGothicRegular";
+}
+
+.page {
+  /*top:40%;
+  bottom : 40%;
+  height: 100%;
+  max-width : 500px;
+  padding: 0 20px;*/
+  
   left:50%;
   transform : translate(-50%,0);
   background-color: #F7F7F7;

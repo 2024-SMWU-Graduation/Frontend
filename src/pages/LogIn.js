@@ -16,7 +16,6 @@ function LogIn() {
   const [email, setEmail] = useState('');
   const [inputPw, setInputPw] = useState('')
 
-
   /*
   const onClickLogin = () => {
     console.log('click login')
@@ -29,46 +28,50 @@ function LogIn() {
   },
   // 페이지 호출 후 처음 한번만 호출될 수 있도록 [] 추가
   [])
-
   */
 
   return (
     <div>
-      <div className = "page">
-        <div className = "titleWrap">
+      <div className="warpper">
+        <h2>
+          로그인 페이지
+        </h2>
+        <div className = "page">
+          <div className = "titleWrap">
             이메일과 비밀번호를 입력하세요
-        </div>
+          </div>
 
-        <div className = "contentWrap">
+          <div className = "contentWrap">
             <div className="inputTitle">
                 이메일
             </div>
             <div className="inputWrap">
                 <input className="input"></input>
             </div>
-        </div>
+          </div>
 
-        <div className = "contentWrap">
+          <div className = "contentWrap">
             <div className="inputTitle">
                 비밀번호
             </div>
             <div className="inputWrap">
                 <input className="input"></input>
             </div>
-        </div>
-
-        <div className="buttonWrap">
+          </div>
+          <div className="buttonWrap">
             <button className="bottomButton">
               로그인
             </button>
-        </div>
-        <hr nonshade/>
-        <div className="registerWrap">
-          <div className="registerTitle">
-            계정이 없으신가요? <Link to="/register">가입하기</Link>
+          </div>
+          <hr nonshade/>
+          <div className="registerWrap">
+            <div className="registerTitle">
+              계정이 없으신가요? <Link to="/register">가입하기</Link>
+            </div>
           </div>
         </div>
       </div>
+      
     </div>
   );
 }
