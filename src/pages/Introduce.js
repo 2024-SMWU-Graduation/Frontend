@@ -74,7 +74,6 @@ function Introduce() {
     }
   };
 
-
   return (
     <div>
       <div className='wrapper'>

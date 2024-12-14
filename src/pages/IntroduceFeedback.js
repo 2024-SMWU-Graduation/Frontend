@@ -1,4 +1,4 @@
-import './Feedback.css'
+import './IntroduceFeedback.css'
 import React, {useRef} from "react";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
@@ -7,6 +7,7 @@ function Feedback() {
     const location = useLocation();
     const {result, videoUrl} = location.state;
     const videoRef = useRef(null); //video 태그 제어
+    // const result = location.state?.result;
 
     const extractPercentage = (result) => {
         const match = result[0].match(/Negative.*?: (\d+(\.\d+)?)%/);

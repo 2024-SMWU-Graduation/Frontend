@@ -2,13 +2,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './Main.css'
 import BasicExample from './components/Nav';
 /*import Footer from './components/Footer';*/
+
 import HomePage from './pages/HomePage';
 import MyPage from './pages/MyPage';
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
 import Introduce from './pages/Introduce';
+import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
-import Feedback from './pages/Feedback';
+import QuestionFeedback from './pages/QuestionFeedback';
 
 function Main() {
   return (
@@ -22,8 +24,9 @@ function Main() {
             <Route path="login" element={<LogIn />} />
             <Route path="register" element={<Register />} />
             <Route path="introduce" element={<Introduce />} />
+            <Route path="introducefeedback" element={<IntroduceFeedback />} />
             <Route path="question" element={<Question />} />
-            <Route path="feedback" element={<Feedback />} />
+            <Route path="questionfeedback" element={<QuestionFeedback />} />
           </Routes>
         </div>
       </div>
