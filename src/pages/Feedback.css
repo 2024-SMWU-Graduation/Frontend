@@ -1,0 +1,22 @@
+.content {
+  display: flex;
+  flex-direction: row;
+}
+.videoArea {
+  padding: 1rem;
+  width: 60%;
+}
+.videoArea video {
+  width: 80%
+}
+.feedbackArea {
+  padding-top: 3rem;
+  width: 40%;
+  align-content: center;
+  background: #F8F9FA;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,9 +1,18 @@
 import './Introduce.css'
 import { ReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from "axios"; 
 
 function Introduce() {
+  const navigate = useNavigate();
+
+  // 플라스크 연결
+  const [file, setFile] = useState(null);
+  const [result, setResult] = useState("");
+
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
+  
   let videoRef = useRef(null)
 
   //사용자 웹캠에 접근
@@ -26,13 +35,13 @@ function Introduce() {
     getUserCamera()
   },[videoRef])
 
-
-  // 플라스크 연결
-  const [file, setFile] = useState(null);
-  const [result, setResult] = useState("");
-
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    // setFile(e.target.files[0]);
+
+    const selectedFile = e.target.files[0]
+    setFile(selectedFile);
+    const fileUrl = URL.createObjectURL(selectedFile);
+    setVideoPreviewUrl(fileUrl);
   };
 
   const handleSubmit = async (e) => {
@@ -53,6 +62,12 @@ function Introduce() {
       });
 
       setResult(response.data.output);
+      navigate('/feedback', {
+        state : {
+          result: response.data.result,
+          videoUrl: videoPreviewUrl
+        }
+      })
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");
@@ -73,9 +88,12 @@ function Introduce() {
           render={({ status, startRecording, stopRecording, mediaBlobUrl }) =>(
             <div>
               <button className='startBtn' onClick={startRecording}>start recording</button> 
-              <button className='stopBtn' onClick={stopRecording}>stop recording</button><br/><br/>
+              <button className='stopBtn' onClick={stopRecording}>stop recording</button>
+              <br/><br/>
               <p>{status}</p>
-              <video src={mediaBlobUrl} controls></video><br/>
+              <video src={mediaBlobUrl} controls></video>
+              <br/>
+              <a href={mediaBlobUrl} download="1분자기소개.mp4">download</a>
             </div>  
           )}
           />
