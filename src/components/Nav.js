@@ -14,7 +14,7 @@ function BasicExample() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/introduce">1분 자기소개</Nav.Link>
-            <Nav.Link href="#link">돌발질문</Nav.Link>
+            <Nav.Link href="/question">돌발질문</Nav.Link>
             <Nav.Link href="/mypage">마이페이지</Nav.Link>
             <Nav.Link href="/login">로그인</Nav.Link>
           </Nav>

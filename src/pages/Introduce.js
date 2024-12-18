@@ -6,11 +6,8 @@ import axios from "axios";
 
 function Introduce() {
   const navigate = useNavigate();
-
-  // 플라스크 연결
   const [file, setFile] = useState(null);
   const [result, setResult] = useState("");
-
   const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
   
   let videoRef = useRef(null)
@@ -36,7 +33,7 @@ function Introduce() {
   },[videoRef])
 
   const handleFileChange = (e) => {
-    // setFile(e.target.files[0]);
+    setFile(e.target.files[0]);
 
     const selectedFile = e.target.files[0]
     setFile(selectedFile);
@@ -51,32 +48,64 @@ function Introduce() {
 
     // 파일을 base64로 변환
     
-    const formData = new FormData();
-    formData.append("file", file)
+    // const formData = new FormData();
+    // formData.append("file", file)
 
-    try {
-      const response = await axios.post("http://localhost:8080/upload", formData, {
+    // try {
+    //   const response = await axios.post("http://localhost:8080/upload", formData, {
+    //     headers: {
+    //     "Content-type": "multipart/form-data",
+    //   },
+    //   });
+
+    //   setResult(response.data.output);
+    //   navigate('/introduceFeedback', {
+    //     state : {
+    //       result: response.data.result,
+    //       videoUrl: videoPreviewUrl
+    //     }
+    //   })
+    // } catch (error) {
+    //   console.error("에러 발생:", error);
+    //   alert("요청에 실패했습니다.");
+    // }
+
+     try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // S3 업로드 API 호출
+      const s3Response = await axios.post("http://localhost:8080/api/interview", formData, {
         headers: {
-        "Content-type": "multipart/form-data",
-      },
+          "Content-type": "multipart/form-data",
+        },
       });
 
-      setResult(response.data.output);
-      navigate('/feedback', {
-        state : {
-          result: response.data.result,
-          videoUrl: videoPreviewUrl
-        }
-      })
+      const videoUrl = s3Response.data.data;
+
+      // AI 분석 API 호출
+      const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
+        headers: {
+          "Content-type": "multipart/form-data",
+        }});
+
+      // 결과를 다음 화면으로 전달
+      navigate('/introducefeedback', {
+        state: {
+          result: aiResponse.data.result,
+          videoUrl: videoUrl,
+        },
+      });
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");
     }
+
   };
 
   return (
     <div>
-      <div className='wrapper'>
+      <div className='wrapper-2'>
         <h2 className='intro'>
           카메라를 켜고 1분간 자기소개를 녹화해주세요
         </h2>

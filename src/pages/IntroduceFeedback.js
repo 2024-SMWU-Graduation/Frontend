@@ -76,7 +76,7 @@ function Feedback() {
                     <p>
                         {result[0]}
                     </p>
-                    <p>[시간대]</p>
+                    <p>[부정 표정 확인하기]</p>
                     {timeStamps && timeStamps.length > 0 ? (
                         <ul>
                             {timeStamps.map((time, index) => (

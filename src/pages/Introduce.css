@@ -1,30 +1,73 @@
-
-.wrapper {
-  height: 1000px;
+.wrapper-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*min-height: 100vh;*/
   font-family: "NoonnuBasicGothicRegular";
+  background-color: white;
+  padding: 20px;
 }
 
 .intro {
-  padding-top: 30px;
-  padding-left: 30px;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
 }
 
 .webcam {
-  padding-top: 20px;
-  padding-left: 20px;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
   width: 640px;
   height: 360px;
 }
 
 .video {
-  padding-top: 30px;
-  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.startBtn {
-  margin-right: 10px;
+.startBtn, .stopBtn {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #003087;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.submit{
-  padding-top: 30px;
+.startBtn:hover, .stopBtn:hover {
+  background-color: #0056b3;
+}
+
+.submit {
+  margin-top: 20px;
+}
+
+.submit button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #28448f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit button:hover {
+  background-color: #003087;
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #333;
 }
