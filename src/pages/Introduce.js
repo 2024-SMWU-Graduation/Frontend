@@ -109,7 +109,21 @@ function Introduce() {
         <h2 className='intro'>
           카메라를 켜고 1분간 자기소개를 녹화해주세요
         </h2>
-        <video className='webcam' ref={videoRef} />
+        
+        {/* <video className='webcam' ref={videoRef} /> */}
+        <div style={{ position: "relative", width: "640px", height: "480px", }}>
+          <video ref={videoRef} />
+          <div
+            style={{
+              position: "absolute",
+              top: "50%", left: "50%",
+              width: "50%", height: "50%",
+              transform: "translate(-50%, -50%)",
+              border: "2px dashed #ffffff",
+            }}
+          ></div>
+        </div>
+
         <div className='video'>
           <ReactMediaRecorder c
           video
@@ -121,7 +135,7 @@ function Introduce() {
               <p>{status}</p>
               <video src={mediaBlobUrl} controls></video>
               <br/>
-              <a href={mediaBlobUrl} download="1분자기소개.mp4">download</a>
+              <a href={mediaBlobUrl} download="1분자기소개.mov">download</a>
             </div>  
           )}
           />

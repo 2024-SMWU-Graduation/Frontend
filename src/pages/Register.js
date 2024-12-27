@@ -6,6 +6,7 @@ import './Register.css';
 function Resister () {
 
   const [email, setEmail] = useState('');
+  const [verificationCode, setVerificationcode] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
@@ -19,9 +20,19 @@ function Resister () {
     }
   }
 
+  const checkVerificationCode = async() => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/mail/verification-code", 
+      { email, verificationCode });
+      console.log('이메일 인증 성공');
+    } catch (error) {
+      console.log('이메일 인증 실패');
+    }
+  }
+
   const signUp = async() => {
     try {
-      const response = await axios.post("http://localhost:8080/users/signup", { email, password, name });
+      const response = await axios.post("http://localhost:8080/api/users/signup", { email, password, name, userRole: "USER" });
       console.log('회원가입 성공');
     } catch (error) {
       console.log('회원가입 실패');
@@ -47,20 +58,31 @@ function Resister () {
                 />
             </div>
         </div>
-
+        
+        {/* 인증번호 발송 버튼 */}
         <div className="buttonWrap">
             <button className="bottomButton" onClick={sendVerificationCode}>
               이메일 인증
             </button>
         </div>
 
+        {/* 인증번호 입력 */}
         <div className = "contentWrap">
             <div className="inputTitle">
                 인증번호 입력
             </div>
             <div className="inputWrap">
-                <input className="input"></input>
+                <input
+                    className="input"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationcode(e.target.value)}
+                />
             </div>
+        </div>
+        <div className="buttonWrap">
+            <button className="bottomButton" onClick={checkVerificationCode}>
+              인증번호 확인
+            </button>
         </div>
 
         <div className = "contentWrap">
@@ -68,7 +90,11 @@ function Resister () {
                 비밀번호 입력
             </div>
             <div className="inputWrap">
-                <input className="input"></input>
+                <input
+                    className="input"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
             </div>
         </div>
 
@@ -78,6 +104,19 @@ function Resister () {
             </div>
             <div className="inputWrap">
                 <input className="input"></input>
+            </div>
+        </div>
+
+        <div className = "contentWrap">
+            <div className="inputTitle">
+                이름 입력
+            </div>
+            <div className="inputWrap">
+                <input
+                    className="input"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
             </div>
         </div>
 
