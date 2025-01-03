@@ -6,17 +6,15 @@ import axios from "axios";
 
 function Introduce() {
   const navigate = useNavigate();
-  const [file, setFile] = useState(null);
-  const [result, setResult] = useState("");
-  const [videoBlob, setVideoBlob] = useState(null);
-  const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
+  const [videoBlob, setVideoBlob] = useState(null); //녹화된 영상 Blob 상태
+  const [mediaBlobUrl, setMediaBlobUrl] = useState(null); //영상 URL 상태
+  const [isRecording, setIsRecording] = useState(false); //녹화 상태
+  const [timeLeft, setTimeLeft] = useState(60); //타이머
+  const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
-  const recordedChunks = useRef([]);
-
-  const [timeLeft, setTimeLeft] = useState(60); // 초기 1분(60초)
+  const recordedChunks = useRef([]); //녹화된 영상 데이터
   const intervalRef = useRef(null);
 
   //사용자 웹캠에 접근
@@ -24,7 +22,6 @@ function Introduce() {
     navigator.mediaDevices
       .getUserMedia({video: true})
       .then((stream) => {
-        //비디오 tag에 stream 추가
         const video = videoRef.current;
         video.srcObject = stream;
         video.play();
@@ -74,13 +71,11 @@ function Introduce() {
     };
 
     mediaRecorder.onstop = () => {
-      const blob = new Blob(recordedChunks.current, { type: "video/mp4" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "1분자기소개.mp4"; // 다운로드 파일 이름
-      a.click();
-      URL.revokeObjectURL(url); // 메모리 해제
+      const videoBlob = new Blob(recordedChunks.current, { type: "video/mp4" });
+      setVideoBlob(videoBlob); //녹화된 영상 Blob 저장
+      const url = URL.createObjectURL(videoBlob);
+      setMediaBlobUrl(URL.createObjectURL(videoBlob));
+      setIsRecordingFinished(true); // 녹화 종료 상태 활성화
     };
 
     mediaRecorder.start();
@@ -93,40 +88,30 @@ function Introduce() {
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
     }
+    setIsRecording(false);
     stopTimer();
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    const fileUrl = URL.createObjectURL(selectedFile);
-    setMediaBlobUrl(fileUrl);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!file) return alert("파일을 선택하세요.");
-     try {
+  const handleSubmit = async () => {
+    if (!videoBlob) {
+      return alert("녹화된 영상이 없습니다.");
+    }
+    try {
       const formData = new FormData();
-      formData.append("file", videoBlob || file);
+      formData.append("file", videoBlob, "recorded-video.mp4");
 
       // S3 업로드 API 호출
       const s3Response = await axios.post("http://localhost:8080/api/interview", formData, {
-        headers: {
-          "Content-type": "multipart/form-data",
-        },
+        headers: { "Content-type": "multipart/form-data", },
       });
 
       const videoUrl = s3Response.data.data;
 
       // AI 분석 API 호출
       const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
-        headers: {
-          "Content-type": "multipart/form-data",
-        }});
+        headers: { "Content-type": "multipart/form-data", },
+      });
 
       // 결과를 다음 화면으로 전달
       navigate('/introducefeedback', {
@@ -153,7 +138,6 @@ function Introduce() {
           {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
         
-        {/* <video className='webcam' ref={videoRef} /> */}
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
           <div
@@ -176,21 +160,19 @@ function Introduce() {
           </button>
           <br />
 
-          {mediaBlobUrl && (
+          {isRecordingFinished && (
             <div>
-              <video src={mediaBlobUrl} controls></video>
-              <br />
-              <a href={mediaBlobUrl} download="1분자기소개.mp4">
-                Download
-              </a>
+              <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+              <button className="startBtn" onClick={handleSubmit}>분석 요청</button>
+              <button className="startBtn" onClick={() => setIsRecordingFinished(false)}>취소</button>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className='submit'>
-            <input type="file" onChange={handleFileChange} />
-            <button type="submit">분석 요청</button>
-          </form>
-          {result && <div>결과: {result}</div>}
+          {mediaBlobUrl && (
+            <div>
+              <video src={mediaBlobUrl} controls></video>
+            </div>
+          )}
         </div>
       </div>
     </div>
