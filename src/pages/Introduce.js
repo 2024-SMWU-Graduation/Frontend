@@ -8,71 +8,80 @@ function Introduce() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [result, setResult] = useState("");
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
+  const [videoBlob, setVideoBlob] = useState(null);
+  const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  // const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
   
-  let videoRef = useRef(null)
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunks = useRef([]);
 
   //사용자 웹캠에 접근
   const getUserCamera = () =>{
-    navigator.mediaDevices.getUserMedia({
-      video: true
-    })
-    .then((stream) => {
-      //비디오 tag에 stream 추가
-      let video = videoRef.current
-      video.srcObject = stream
-      video.play()
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
+    navigator.mediaDevices
+      .getUserMedia({video: true})
+      .then((stream) => {
+        //비디오 tag에 stream 추가
+        const video = videoRef.current;
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
-    getUserCamera()
-  },[videoRef])
+    getUserCamera();
+  },[]);
+
+  // 녹화 시작 함수
+  const startRecording = () => {
+    const stream = videoRef.current.srcObject;
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+
+    recordedChunks.current = [];
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        recordedChunks.current.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks.current, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+      setMediaBlobUrl(url);
+      setVideoBlob(blob);
+    };
+
+    mediaRecorder.start();
+    mediaRecorderRef.current = mediaRecorder;
+    setIsRecording(true);
+  };
+
+  // 녹화 중지 함수
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-
-    const selectedFile = e.target.files[0]
+    const selectedFile = e.target.files[0];
     setFile(selectedFile);
     const fileUrl = URL.createObjectURL(selectedFile);
-    setVideoPreviewUrl(fileUrl);
+    setMediaBlobUrl(fileUrl);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!file) return alert("파일을 선택하세요.");
-
-    // 파일을 base64로 변환
-    
-    // const formData = new FormData();
-    // formData.append("file", file)
-
-    // try {
-    //   const response = await axios.post("http://localhost:8080/upload", formData, {
-    //     headers: {
-    //     "Content-type": "multipart/form-data",
-    //   },
-    //   });
-
-    //   setResult(response.data.output);
-    //   navigate('/introduceFeedback', {
-    //     state : {
-    //       result: response.data.result,
-    //       videoUrl: videoPreviewUrl
-    //     }
-    //   })
-    // } catch (error) {
-    //   console.error("에러 발생:", error);
-    //   alert("요청에 실패했습니다.");
-    // }
-
      try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", videoBlob || file);
 
       // S3 업로드 API 호출
       const s3Response = await axios.post("http://localhost:8080/api/interview", formData, {
@@ -100,7 +109,6 @@ function Introduce() {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");
     }
-
   };
 
   return (
@@ -125,20 +133,23 @@ function Introduce() {
         </div>
 
         <div className='video'>
-          <ReactMediaRecorder c
-          video
-          render={({ status, startRecording, stopRecording, mediaBlobUrl }) =>(
+          <button className="startBtn" onClick={startRecording} disabled={isRecording}>
+            Start Recording
+          </button>
+          <button className="stopBtn" onClick={stopRecording} disabled={!isRecording}>
+            Stop Recording
+          </button>
+          <br />
+          {mediaBlobUrl && (
             <div>
-              <button className='startBtn' onClick={startRecording}>start recording</button> 
-              <button className='stopBtn' onClick={stopRecording}>stop recording</button>
-              <br/><br/>
-              <p>{status}</p>
               <video src={mediaBlobUrl} controls></video>
-              <br/>
-              <a href={mediaBlobUrl} download="1분자기소개.mov">download</a>
-            </div>  
+              <br />
+              <a href={mediaBlobUrl} download="1분자기소개.webm">
+                Download
+              </a>
+            </div>
           )}
-          />
+
           <form onSubmit={handleSubmit} className='submit'>
             <input type="file" onChange={handleFileChange} />
             <button type="submit">분석 요청</button>
