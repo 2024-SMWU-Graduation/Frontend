@@ -11,11 +11,13 @@ function Introduce() {
   const [videoBlob, setVideoBlob] = useState(null);
   const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
-  // const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunks = useRef([]);
+
+  const [timeLeft, setTimeLeft] = useState(60); // 초기 1분(60초)
+  const intervalRef = useRef(null);
 
   //사용자 웹캠에 접근
   const getUserCamera = () =>{
@@ -32,9 +34,32 @@ function Introduce() {
       });
   };
 
+  // 화면 키면 바로 웹캠 띄우기
   useEffect(() => {
     getUserCamera();
   },[]);
+
+  //타이머 시작
+  const startTimer = () => {
+    setTimeLeft(60); // 타이머 초기화
+    intervalRef.current = window.setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          stopRecording(); // 타이머가 0이 되면 녹화 중지
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+  };
+
+  //타이머 정지
+  const stopTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
 
   // 녹화 시작 함수
   const startRecording = () => {
@@ -61,6 +86,7 @@ function Introduce() {
     mediaRecorder.start();
     mediaRecorderRef.current = mediaRecorder;
     setIsRecording(true);
+    startTimer();
   };
 
   // 녹화 중지 함수
@@ -69,6 +95,7 @@ function Introduce() {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
+    stopTimer();
   };
 
   const handleFileChange = (e) => {
@@ -114,11 +141,16 @@ function Introduce() {
     }
   };
 
+  const padTime = (time) => time.toString().padStart(2, "0");
+
   return (
     <div>
       <div className='wrapper-2'>
         <h2 className='intro'>
           카메라를 켜고 1분간 자기소개를 녹화해주세요
+          <br/>
+          <br/>
+          {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
         
         {/* <video className='webcam' ref={videoRef} /> */}
@@ -143,11 +175,12 @@ function Introduce() {
             Stop Recording
           </button>
           <br />
+
           {mediaBlobUrl && (
             <div>
               <video src={mediaBlobUrl} controls></video>
               <br />
-              <a href={mediaBlobUrl} download="1분자기소개.webm">
+              <a href={mediaBlobUrl} download="1분자기소개.mp4">
                 Download
               </a>
             </div>
