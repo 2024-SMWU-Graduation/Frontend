@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
 import './LogIn.css';
+import {useAuth} from "../AuthContext";
+import {login} from "../authActions";
 
 //import { useForm,Controller } from "react-hook-form";
-//import { AuthContext } from "components/Functions/AuthContext";
 
 const User = {
   email : " " ,
@@ -14,65 +15,60 @@ const User = {
 
 function LogIn() {
   const [email, setEmail] = useState('');
-  const [inputPw, setInputPw] = useState('')
+  const [password, setPassword] = useState('')
+  const { dispatch } = useAuth();
+  const navigate = useNavigate();
 
-  /*
-  const onClickLogin = () => {
-    console.log('click login')
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const url = 'http://localhost:8080/api/users/login'
+      await login(dispatch, email, password)
+      navigate('/')
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+    }
   }
-  
-  useEffect(() => {
-    axios.get('/user_inform/login')
-    .then(res => console.log(res))
-    .catch()
-  },
-  // 페이지 호출 후 처음 한번만 호출될 수 있도록 [] 추가
-  [])
-  */
 
   return (
-    <div>
-      <div className="warpper">
-        <h2>
-          
-        </h2>
-        <div className = "page">
-          <div className = "titleWrap">
-            이메일과 비밀번호를 입력하세요
+      <div className="login-container">
+        <div className="login-box">
+          <h2 className="login-title">로그인</h2>
+          <form onSubmit={handleLogin}>
+            <div className="input-group">
+              <label htmlFor="email">이메일</label>
+              <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="password">비밀번호</label>
+              <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+              />
+            </div>
+            <button type="submit" className="login-button">로그인</button>
+          </form>
+
+          <div className="social-login">
+            <button className="kakao-login">카카오 로그인</button>
+            <button className="naver-login">네이버 로그인</button>
           </div>
 
-          <div className = "contentWrap">
-            <div className="inputTitle">
-                이메일
-            </div>
-            <div className="inputWrap">
-                <input className="input"></input>
-            </div>
-          </div>
-
-          <div className = "contentWrap">
-            <div className="inputTitle">
-                비밀번호
-            </div>
-            <div className="inputWrap">
-                <input className="input"></input>
-            </div>
-          </div>
-          <div className="buttonWrap">
-            <button className="bottomButton">
-              로그인
-            </button>
-          </div>
-          <hr nonshade/>
-          <div className="registerWrap">
-            <div className="registerTitle">
-              계정이 없으신가요? <Link to="/register">가입하기</Link>
-            </div>
+          <div className="register-link">
+            계정이 없으신가요? <Link to="/register">가입하기</Link>
           </div>
         </div>
       </div>
-      
-    </div>
   );
 }
 

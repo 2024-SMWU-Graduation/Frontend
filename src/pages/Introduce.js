@@ -2,7 +2,8 @@ import './Introduce.css'
 import { ReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from "axios"; 
+import axios from "axios";
+import { api } from "../axios"
 
 function Introduce() {
   const navigate = useNavigate();
@@ -102,8 +103,10 @@ function Introduce() {
       formData.append("file", videoBlob, "recorded-video.mp4");
 
       // S3 업로드 API 호출
-      const s3Response = await axios.post("http://localhost:8080/api/interview", formData, {
-        headers: { "Content-type": "multipart/form-data", },
+      const s3Response = await api.post("/interview", formData, {
+        headers: {
+          "Content-type": "multipart/form-data",
+        },
       });
 
       const videoUrl = s3Response.data.data;
@@ -137,7 +140,7 @@ function Introduce() {
           <br/>
           {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
-        
+
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
           <div
