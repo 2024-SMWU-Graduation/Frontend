@@ -1,5 +1,4 @@
 import {AuthProvider, useAuth} from "./AuthContext";
-import {ProtectedRoute} from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './Main.css'
 import NavigateBar from './components/Nav';
@@ -36,14 +35,14 @@ function Main() {
                 <Route path="question" element={<Question />} />
                 <Route path="questionfeedback" element={<QuestionFeedback />} />
 
-                {/*<Route path="webcamtest" element={<WebcamTest />} />*/}
+                {/* <Route path="webcamtest" element={<WebcamTest />} /> */}
               </Routes>
-              {/*<Footer />*/}
             </div>
           </div>
       </BrowserRouter>
       </AuthProvider>
   );
 }
+
 
 export default Main;

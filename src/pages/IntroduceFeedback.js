@@ -49,8 +49,15 @@ function Feedback() {
       }
 
       if (videoRef.current) {
+        videoRef.current.pause();
         videoRef.current.currentTime = parseFloat(time); //동영샹 재생 시간 설정 (숫자로 변환)
-        videoRef.current.play() //동영상 재생
+        
+        const onSeeked = () => {
+          videoRef.current.play();
+          videoRef.current.removeEventListener("seeked", onSeeked); // 이벤트 제거
+        };
+        
+        videoRef.current.addEventListener("seeked", onSeeked);
       }
     }
 
@@ -68,7 +75,7 @@ function Feedback() {
         <div>
             <div className='content'>
                 <div className='videoArea'>
-                    <video ref={videoRef} src={videoUrl} controls></video>
+                    <video ref={videoRef} src={videoUrl} controls preload="auto"></video>
                 </div>
                 <div className='feedbackArea'>
                     <h3>인터뷰 분석 완료!</h3>
