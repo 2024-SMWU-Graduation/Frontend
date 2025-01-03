@@ -12,7 +12,7 @@ import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
 import QuestionFeedback from './pages/QuestionFeedback';
 
-import WebcamTest from './pages/WebcamTest';
+// import WebcamTest from './pages/WebcamTest';
 
 function Main() {
   return (
@@ -30,7 +30,7 @@ function Main() {
             <Route path="question" element={<Question />} />
             <Route path="questionfeedback" element={<QuestionFeedback />} />
 
-            <Route path="webcamtest" element={<WebcamTest />} />
+            {/* <Route path="webcamtest" element={<WebcamTest />} /> */}
           </Routes>
         </div>
       </div>
