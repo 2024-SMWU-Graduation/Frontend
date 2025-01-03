@@ -1,7 +1,9 @@
+import {AuthProvider, useAuth} from "./AuthContext";
+import {ProtectedRoute} from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './Main.css'
-import BasicExample from './components/Nav';
-/*import Footer from './components/Footer';*/
+import NavigateBar from './components/Nav';
+import Footer from './components/Footer';
 
 import HomePage from './pages/HomePage';
 import MyPage from './pages/MyPage';
@@ -11,32 +13,37 @@ import Introduce from './pages/Introduce';
 import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
 import QuestionFeedback from './pages/QuestionFeedback';
+import {useEffect} from "react";
+import {setAxiosInterceptors} from "./axios";
+import {logout} from "./authActions";
 
-import WebcamTest from './pages/WebcamTest';
+// import WebcamTest from './pages/WebcamTest';
 
 function Main() {
   return (
-    <BrowserRouter>
-      <div className='wrapper'>
-        <div className='contentWrapper'>
-          <BasicExample />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="mypage" element={<MyPage />} />
-            <Route path="login" element={<LogIn />} />
-            <Route path="register" element={<Register />} />
-            <Route path="introduce" element={<Introduce />} />
-            <Route path="introducefeedback" element={<IntroduceFeedback />} />
-            <Route path="question" element={<Question />} />
-            <Route path="questionfeedback" element={<QuestionFeedback />} />
+      <AuthProvider>
+      <BrowserRouter>
+          <div className='wrapper'>
+            <div className='contentWrapper'>
+              <NavigateBar />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="mypage" element={<MyPage />} />
+                <Route path="login" element={<LogIn />} />
+                <Route path="register" element={<Register />} />
+                <Route path="introduce" element={<Introduce />} />
+                <Route path="introducefeedback" element={<IntroduceFeedback />} />
+                <Route path="question" element={<Question />} />
+                <Route path="questionfeedback" element={<QuestionFeedback />} />
 
-            <Route path="webcamtest" element={<WebcamTest />} />
-          </Routes>
-        </div>
-      </div>
-    </BrowserRouter>
+                {/*<Route path="webcamtest" element={<WebcamTest />} />*/}
+              </Routes>
+              {/*<Footer />*/}
+            </div>
+          </div>
+      </BrowserRouter>
+      </AuthProvider>
   );
 }
-
 
 export default Main;

@@ -1,11 +1,27 @@
-import { Link } from 'react-router-dom';
-//import './Nav.css'
+import {Link, useNavigate} from 'react-router-dom';
+import './Nav.css'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import "bootstrap/dist/css/bootstrap.min.css";
+import {useAuth} from "../AuthContext";
+import {logout} from "../authActions";
 
-function BasicExample() {
+function NavigateBar() {
+  const { state, dispatch } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      logout(dispatch);
+      navigate('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      alert('Failed to log out. Please try again.');
+    }
+  }
+
+  console.log(state.isLoggedIn)
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -15,8 +31,14 @@ function BasicExample() {
           <Nav className="me-auto">
             <Nav.Link href="/introduce">1분 자기소개</Nav.Link>
             <Nav.Link href="/question">돌발질문</Nav.Link>
-            <Nav.Link href="/mypage">마이페이지</Nav.Link>
-            <Nav.Link href="/login">로그인</Nav.Link>
+            {state.isLoggedIn ? (
+                <>
+                  <Nav.Link href="/mypage">마이페이지</Nav.Link>
+                  <Nav.Link onClick={ handleLogout }>로그아웃</Nav.Link>
+                </>
+            ) : (
+              <Nav.Link href="/login">로그인</Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -24,22 +46,5 @@ function BasicExample() {
   );
 }
 
-export default BasicExample;
+export default NavigateBar;
 
-
-/*
-function Nav() {
-  return (
-    <div className="nav">
-      <div className='logo'>
-        <Link classname="navbarMenu" to={'/'}>로고 넣기</Link>
-      </div>
-      <Link classname="navbarMenu" to={'/introduce'}>1분 자기소개</Link>
-      <Link classname="navbarMenu" to={'/mypage'}>마이페이지</Link>
-      <Link classname="navbarMenu" to={'/login'}>로그인</Link>
-    </div>
-  );
-}
-
-export default Nav;
-*/
