@@ -39,7 +39,7 @@ function Introduce() {
   // 녹화 시작 함수
   const startRecording = () => {
     const stream = videoRef.current.srcObject;
-    const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/mp4" });
 
     recordedChunks.current = [];
     mediaRecorder.ondataavailable = (event) => {
@@ -49,10 +49,13 @@ function Introduce() {
     };
 
     mediaRecorder.onstop = () => {
-      const blob = new Blob(recordedChunks.current, { type: "video/webm" });
+      const blob = new Blob(recordedChunks.current, { type: "video/mp4" });
       const url = URL.createObjectURL(blob);
-      setMediaBlobUrl(url);
-      setVideoBlob(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "1분자기소개.mp4"; // 다운로드 파일 이름
+      a.click();
+      URL.revokeObjectURL(url); // 메모리 해제
     };
 
     mediaRecorder.start();
