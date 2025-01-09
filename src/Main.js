@@ -15,6 +15,7 @@ import QuestionFeedback from './pages/QuestionFeedback';
 import {useEffect} from "react";
 import {setAxiosInterceptors} from "./axios";
 import {logout} from "./authActions";
+import AuthSuccess from "./pages/AuthSuccess";
 
 // import WebcamTest from './pages/WebcamTest';
 
@@ -26,14 +27,15 @@ function Main() {
             <div className='contentWrapper'>
               <NavigateBar />
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="mypage" element={<MyPage />} />
-                <Route path="login" element={<LogIn />} />
-                <Route path="register" element={<Register />} />
-                <Route path="introduce" element={<Introduce />} />
-                <Route path="introducefeedback" element={<IntroduceFeedback />} />
-                <Route path="question" element={<Question />} />
-                <Route path="questionfeedback" element={<QuestionFeedback />} />
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="mypage" element={<MyPage />} />
+                  <Route path="login" element={<LogIn />} />
+                  <Route path="social-success" element={<AuthSuccess />} />
+                  <Route path="register" element={<Register />} />
+                  <Route path="introduce" element={<Introduce />} />
+                  <Route path="introducefeedback" element={<IntroduceFeedback />} />
+                  <Route path="question" element={<Question />} />
+                  <Route path="questionfeedback" element={<QuestionFeedback />} />
 
                 {/* <Route path="webcamtest" element={<WebcamTest />} /> */}
               </Routes>
