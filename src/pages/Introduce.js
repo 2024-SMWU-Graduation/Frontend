@@ -22,7 +22,7 @@ function Introduce() {
   //사용자 웹캠에 접근
   const getUserCamera = () =>{
     navigator.mediaDevices
-      .getUserMedia({video: true, audio : true})
+      .getUserMedia({video: true})
       .then((stream) => {
         const video = videoRef.current;
         video.srcObject = stream;
@@ -61,8 +61,12 @@ function Introduce() {
   };
 
   // 녹화 시작 함수
-  const startRecording = () => {
-    const stream = videoRef.current.srcObject;
+  const startRecording = async () => {
+    //const stream = videoRef.current.srcObject;
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video : true,
+      audio : true,
+    });
     const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/mp4" });
 
     recordedChunks.current = [];
