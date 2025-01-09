@@ -17,8 +17,6 @@ import {setAxiosInterceptors} from "./axios";
 import {logout} from "./authActions";
 import AuthSuccess from "./pages/AuthSuccess";
 
-// import WebcamTest from './pages/WebcamTest';
-
 function Main() {
   return (
       <AuthProvider>
@@ -35,8 +33,6 @@ function Main() {
                 <Route path="introducefeedback" element={<IntroduceFeedback />} />
                 <Route path="question" element={<Question />} />
                 <Route path="questionfeedback" element={<QuestionFeedback />} />
-
-                {/* <Route path="webcamtest" element={<WebcamTest />} /> */}
               </Routes>
             </div>
           </div>
