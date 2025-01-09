@@ -15,6 +15,7 @@ import QuestionFeedback from './pages/QuestionFeedback';
 import {useEffect} from "react";
 import {setAxiosInterceptors} from "./axios";
 import {logout} from "./authActions";
+import AuthSuccess from "./pages/AuthSuccess";
 
 // import WebcamTest from './pages/WebcamTest';
 

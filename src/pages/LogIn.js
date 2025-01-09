@@ -31,6 +31,19 @@ function LogIn() {
     }
   }
 
+  // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=ddd4e334627d4eb89fc783a43641bd3c&redirect_uri=http://localhost:8080/login/oauth2/code/kakao&response_type=code`;
+  
+  const KAKAO_AUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
+  const NAVER_AUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
+  
+  const handleKakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  }
+
+  const handleNaverLogin = () => {
+    window.location.href = NAVER_AUTH_URL;
+  }
+
   return (
       <div className="login-container">
         <div className="login-box">
@@ -60,8 +73,8 @@ function LogIn() {
           </form>
 
           <div className="social-login">
-            <button className="kakao-login">카카오 로그인</button>
-            <button className="naver-login">네이버 로그인</button>
+            <button className="kakao-login" onClick={handleKakaoLogin}>카카오 로그인</button>
+            <button className="naver-login" onClick={handleNaverLogin}>네이버 로그인</button>
           </div>
 
           <div className="register-link">

@@ -12,6 +12,7 @@ function Introduce() {
   const [isRecording, setIsRecording] = useState(false); //녹화 상태
   const [timeLeft, setTimeLeft] = useState(60); //타이머
   const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -75,8 +76,10 @@ function Introduce() {
       const videoBlob = new Blob(recordedChunks.current, { type: "video/mp4" });
       setVideoBlob(videoBlob); //녹화된 영상 Blob 저장
       const url = URL.createObjectURL(videoBlob);
-      setMediaBlobUrl(URL.createObjectURL(videoBlob));
-      setIsRecordingFinished(true); // 녹화 종료 상태 활성화
+      setMediaBlobUrl(url);
+      setIsPopupOpen(true); // 팝업 상태 활성화
+      // setMediaBlobUrl(URL.createObjectURL(videoBlob));
+      // setIsRecordingFinished(true); // 녹화 종료 상태 활성화
     };
 
     mediaRecorder.start();
@@ -163,21 +166,32 @@ function Introduce() {
           </button>
           <br />
 
-          {isRecordingFinished && (
+          {/* {isRecordingFinished && (
             <div>
               <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
               <button className="startBtn" onClick={handleSubmit}>분석 요청</button>
               <button className="startBtn" onClick={() => setIsRecordingFinished(false)}>취소</button>
             </div>
           )}
-
           {mediaBlobUrl && (
             <div>
               <video src={mediaBlobUrl} controls></video>
             </div>
-          )}
+          )} */}
         </div>
       </div>
+    
+      {isPopupOpen && (
+        <div className="popup">
+          <div className="popup-content">
+            <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+            <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
+            <button className="startBtn" onClick={handleSubmit}>분석 요청</button>
+            <button className="startBtn" onClick={() => setIsPopupOpen(false)}>취소</button>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 }
