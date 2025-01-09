@@ -1,15 +1,23 @@
 .home-background {
   margin: 0;
-  font-family: "NoonnuBasicGothicRegular";
+  font-family: "NoonnuBasicGothicRegular", Arial, sans-serif;
   background: linear-gradient(to right, #003087, #28448f, #99b6ec, #003087);
   color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-container {
   display: flex;
   flex-direction: column;
-  height: 700px;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  text-align: center;
 }
 
 .main {
@@ -18,53 +26,72 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 20px;
 }
 
 .headline {
   font-size: 48px;
   font-weight: bold;
-  line-height: 1.2;
+  line-height: 1.4;
+  margin: 0;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .highlight {
-  color: #003087;
+  color: #99b6ec;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .subheadline {
-  font-size: 18px;
-  margin-top: 15px;
-  max-width: 600px;
+  font-size: 20px;
+  margin-top: 20px;
+  max-width: 800px;
+  line-height: 1.6;
+  color: #e0e7ff;
 }
 
 .cta-button {
-  margin-top: 30px;
-  padding: 12px 24px;
-  font-size: 16px;
+  margin-top: 40px;
+  padding: 14px 28px;
+  font-size: 18px;
   font-weight: bold;
-  background-color: #003087;
+  background: linear-gradient(45deg, #003087, #28448f);
   color: white;
   border: none;
-  border-radius: 25px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease-in-out;
 }
 
 .cta-button:hover {
-  background-color: #99b6ec;
-  transform: translateY(-2px);
+  background: linear-gradient(45deg, #28448f, #99b6ec);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px) scale(1.05);
 }
 
-/*
-.main {
-  background: url(..//components/office.jpg);
-  background-position: center; 
-  background-size: cover; 
-  height: 1300px; 
-  align-items: center; 
-  justify-content: center; 
-  display: flex; 
+.cta-button:active {
+  background: linear-gradient(45deg, #003087, #28448f);
+  transform: translateY(0) scale(1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
-*/
+
+/* Optional: Add smooth scrolling effect */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .headline {
+    font-size: 36px;
+  }
+  .subheadline {
+    font-size: 16px;
+  }
+  .cta-button {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
