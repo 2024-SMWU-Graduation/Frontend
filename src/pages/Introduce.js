@@ -22,7 +22,7 @@ function Introduce() {
   //사용자 웹캠에 접근
   const getUserCamera = () =>{
     navigator.mediaDevices
-      .getUserMedia({video: true})
+      .getUserMedia({video: true, audio : true})
       .then((stream) => {
         const video = videoRef.current;
         video.srcObject = stream;
