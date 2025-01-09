@@ -30,18 +30,15 @@ function LogIn() {
       alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
     }
   }
-
-  // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=ddd4e334627d4eb89fc783a43641bd3c&redirect_uri=http://localhost:8080/login/oauth2/code/kakao&response_type=code`;
-  
   const KAKAO_AUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
   const NAVER_AUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
-  
-  const handleKakaoLogin = () => {
-    window.location.href = KAKAO_AUTH_URL;
-  }
 
+  const handleKakaoLogin = () => {
+  window.location.href = KAKAO_AUTH_URL;
+  }
+  
   const handleNaverLogin = () => {
-    window.location.href = NAVER_AUTH_URL;
+  window.location.href = NAVER_AUTH_URL;
   }
 
   return (

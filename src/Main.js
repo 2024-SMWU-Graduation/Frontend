@@ -28,6 +28,7 @@ function Main() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="mypage" element={<MyPage />} />
                 <Route path="login" element={<LogIn />} />
+                <Route path="social-success" element={<AuthSuccess />} />
                 <Route path="register" element={<Register />} />
                 <Route path="introduce" element={<Introduce />} />
                 <Route path="introducefeedback" element={<IntroduceFeedback />} />
