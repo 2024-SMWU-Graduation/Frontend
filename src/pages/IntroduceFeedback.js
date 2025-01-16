@@ -1,5 +1,5 @@
 import './IntroduceFeedback.css'
-import React, {useRef} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 
@@ -7,12 +7,12 @@ function Feedback() {
     const location = useLocation();
     const {result, videoUrl} = location.state;
     const videoRef = useRef(null); //video 태그 제어
-    // const result = location.state?.result;
+    const [apiResult, setApiResult] = useState(null);
 
     const extractPercentage = (result) => {
         const match = result[0].match(/Negative.*?: (\d+(\.\d+)?)%/);
         return match ? parseFloat(match[1]) : null;
-    }
+    };
 
     const analyzePercentage = (percentage) => {
         if (percentage >= 40) {
@@ -20,7 +20,7 @@ function Feedback() {
         } else {
             return "인터뷰 내내 긍정적인 미소를 유지했어요 🙂"
         }
-    }
+    };
 
     //타임스탬프 추출
     const extractTimeStamps = (result) => {
@@ -60,6 +60,29 @@ function Feedback() {
         videoRef.current.addEventListener("seeked", onSeeked);
       }
     }
+
+    // stt 분석 텍스트
+    const OpenAIResultDisplay = () => {
+      useEffect(() => {
+        // S3 파일 URL
+        const s3Url = "https://easy-terview-smwu.s3.ap-northeast-2.amazonaws.com/user/1/introduce/script/transcription-1-d9672900-84ee-4b9a-9fa6-612be3fc80b5.json";
+
+        // Fetch JSON 파일
+        fetch(s3Url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch JSON from S3");
+          }
+          return response.json(); // JSON 데이터로 변환
+        })
+        .then((data) => {
+          setApiResult(data); // 데이터 상태에 저장
+        })
+        .catch((error) => {
+          console.error("Error fetching JSON from S3:", error);
+        });
+      }, []);
+    };
 
     console.log(result);
     const percentage = extractPercentage(result);
@@ -105,10 +128,17 @@ function Feedback() {
                     ) : (
                         <p>시간대 정보 없음</p>
                     )}
+                    
+                    <h3>스크립트 피드백</h3>
+                    {apiResult ? (
+                      <pre>{JSON.stringify(apiResult, null, 2)}</pre> 
+                    ) : (
+                      <p>로딩 중...</p>
+                    )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Feedback;

@@ -1,73 +1,123 @@
 import './Question.css'
-import { ReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from "axios"; 
+import { api } from "../axios";
+
+import QuestionData from "../assets/data/QuestionData.js";
+import CategoryData from "../assets/data/CategoryData.js";
 
 function Question() {
   const navigate = useNavigate();
+  const [videoBlob, setVideoBlob] = useState(null); //녹화된 영상 Blob 상태
+  const [mediaBlobUrl, setMediaBlobUrl] = useState(null); //영상 URL 상태
+  const [isRecording, setIsRecording] = useState(false); //녹화 상태
+  const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
 
-  // 플라스크 연결
-  const [file, setFile] = useState(null);
-  const [result, setResult] = useState("");
-
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 버튼 상태
+  const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
   
-  let videoRef = useRef(null)
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunks = useRef([]); //녹화된 영상 데이터
+  const intervalRef = useRef(null);
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category); // 선택한 카테고리 업데이트
+    const questions = QuestionData[category]; // 해당 카테고리의 질문 가져오기
+    if (questions && questions.length > 0) {
+      const randomText = questions[Math.floor(Math.random() * questions.length)];
+      setSelectedText(randomText);
+    } else {
+      setSelectedText("해당 카테고리에 질문이 없습니다.");
+    }
+  }
 
   //사용자 웹캠에 접근
   const getUserCamera = () =>{
-    navigator.mediaDevices.getUserMedia({
-      video: true
-    })
-    .then((stream) => {
-      //비디오 tag에 stream 추가
-      let video = videoRef.current
-      video.srcObject = stream
-      video.play()
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-
-  useEffect(() => {
-    getUserCamera()
-  },[videoRef])
-
-  const handleFileChange = (e) => {
-    // setFile(e.target.files[0]);
-
-    const selectedFile = e.target.files[0]
-    setFile(selectedFile);
-    const fileUrl = URL.createObjectURL(selectedFile);
-    setVideoPreviewUrl(fileUrl);
+    navigator.mediaDevices
+      .getUserMedia({video: true})
+      .then((stream) => {
+        const video = videoRef.current;
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // 화면 키면 바로 웹캠 띄우기
+  useEffect(() => {
+    getUserCamera();
+  },[]);
 
-    if (!file) return alert("파일을 선택하세요.");
+  // 녹화 시작 함수
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true, // 녹화 시에만 오디오 추가
+    });
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/mp4" });
 
-    // 파일을 base64로 변환
-    
-    const formData = new FormData();
-    formData.append("file", file)
+    recordedChunks.current = [];
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        recordedChunks.current.push(event.data);
+      }
+    };
 
+    mediaRecorder.onstop = () => {
+      const videoBlob = new Blob(recordedChunks.current, { type: "video/mp4" });
+      setVideoBlob(videoBlob); //녹화된 영상 Blob 저장
+      const url = URL.createObjectURL(videoBlob);
+      setMediaBlobUrl(url);
+      setIsPopupOpen(true); // 팝업 상태 활성화
+    };
+
+    mediaRecorder.start();
+    mediaRecorderRef.current = mediaRecorder;
+    setIsRecording(true);
+  };
+
+  // 녹화 중지 함수
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+  };
+
+  const handleSubmit = async () => {
+    if (!videoBlob) {
+      return alert("녹화된 영상이 없습니다.");
+    }
     try {
-      const response = await axios.post("http://localhost:8080/upload", formData, {
+      const formData = new FormData();
+      formData.append("file", videoBlob, "recorded-video.mp4");
+
+      // S3 업로드 API 호출
+      const s3Response = await api.post("/interview", formData, {
         headers: {
-        "Content-type": "multipart/form-data",
-      },
+          "Content-type": "multipart/form-data",
+        },
       });
 
-      setResult(response.data.output);
-      navigate('/feedback', {
-        state : {
-          result: response.data.result,
-          videoUrl: videoPreviewUrl
-        }
-      })
+      const videoUrl = s3Response.data.data;
+
+      // AI 분석 API 호출
+      const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
+        headers: { "Content-type": "multipart/form-data", },
+      });
+
+      // 결과를 다음 화면으로 전달
+      navigate('/introducefeedback', {
+        state: {
+          result: aiResponse.data.result,
+          videoUrl: videoUrl,
+        },
+      });
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");
@@ -76,12 +126,27 @@ function Question() {
 
   return (
     <div>
-      <div className='wrapper-2'>
+      <div className='question-wrapper'>
         <h2 className='intro'>
-          카메라를 켜고 제시된 질문에 답변을 녹화해주세요
+          아래 직무별 버튼 중 한가지를 클릭하여 질문을 확인하세요.
         </h2>
-
-        {/* <video className='webcam' ref={videoRef} /> */}
+        <br/>
+        <div className='catergory-buttons'>
+          {CategoryData.map((category, index) => (
+            <button
+              key={index}
+              className={`category-button ${selectedCategory === category ? 'selected' : ''}`}
+              onClick={() => handleCategorySelect(category)}
+            >
+            {category}
+            </button>
+          ))}
+        </div>
+        <br/>
+        <h2 className="selected-text">
+          {selectedText}
+        </h2>
+        <br/>
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
           <div
@@ -96,27 +161,26 @@ function Question() {
         </div>
 
         <div className='video'>
-          <ReactMediaRecorder c
-          video
-          render={({ status, startRecording, stopRecording, mediaBlobUrl }) =>(
-            <div>
-              <button className='startBtn' onClick={startRecording}>start recording</button> 
-              <button className='stopBtn' onClick={stopRecording}>stop recording</button>
-              <br/><br/>
-              <p>{status}</p>
-              <video src={mediaBlobUrl} controls></video>
-              <br/>
-              <a href={mediaBlobUrl} download="돌발질문.mov">download</a>
-            </div>  
-          )}
-          />
-          <form onSubmit={handleSubmit} className='submit'>
-            <input type="file" onChange={handleFileChange} />
-            <button type="submit">분석 요청</button>
-          </form>
-          {result && <div>결과: {result}</div>}
+          <button className="startBtn" onClick={startRecording} disabled={isRecording}>
+            Start Recording
+          </button>
+          <button className="stopBtn" onClick={stopRecording} disabled={!isRecording}>
+            Stop Recording
+          </button>
+          <br />
         </div>
       </div>
+
+      {isPopupOpen && (
+        <div className="popup">
+          <div className="popup-content">
+            <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+            <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
+            <button className="startBtn" onClick={handleSubmit}>분석 요청</button>
+            <button className="startBtn" onClick={() => setIsPopupOpen(false)}>취소</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
