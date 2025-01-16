@@ -1,21 +1,24 @@
 import './MyPage.css'
 import {useState} from "react";
 import VideoGrid from "./IntroduceList";
+import ProfileContent from "./ProfileContent";
 
 const MyPage = () => {
     const [selectedMenu, setSelectedMenu] = useState('profile');
 
     return (
         <div className="my-page">
-            <Sidebar selectedMenu={selectedMenu} onMenuSelect={setSelectedMenu} />
-            <Content selectedMenu={selectedMenu} />
+            <Sidebar selectedMenu={selectedMenu} onMenuSelect={setSelectedMenu}/>
+            <div className="content">
+                <Content selectedMenu={selectedMenu}/>
+            </div>
         </div>
     );
 };
 
-const Sidebar = ({ selectedMenu, onMenuSelect }) => {
+const Sidebar = ({selectedMenu, onMenuSelect}) => {
     const menuItems = [
-        { id: 'profile', label: '회원 정보' },
+        {id: 'profile', label: '회원 정보' },
         { id: 'introduce-feedback', label: '자기소개 면접 조회' },
         { id: 'job-feedback', label: '직무별 면접 조회' },
         // 추가 메뉴 항목들...
@@ -39,7 +42,7 @@ const Sidebar = ({ selectedMenu, onMenuSelect }) => {
 const Content = ({ selectedMenu }) => {
     switch (selectedMenu) {
         case 'profile':
-            // return <ProfileContent.js />;
+            return <ProfileContent />;
         case 'introduce-feedback':
             return <VideoGrid />;
         // 추가 컨텐츠 컴포넌트들...
@@ -47,6 +50,5 @@ const Content = ({ selectedMenu }) => {
             return <div>선택된 메뉴가 없습니다.</div>;
     }
 };
-
 
 export default MyPage;
