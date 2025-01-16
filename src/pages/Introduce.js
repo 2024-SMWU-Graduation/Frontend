@@ -1,5 +1,4 @@
 import './Introduce.css'
-import { ReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
@@ -62,10 +61,9 @@ function Introduce() {
 
   // 녹화 시작 함수
   const startRecording = async () => {
-    //const stream = videoRef.current.srcObject;
     const stream = await navigator.mediaDevices.getUserMedia({
-      video : true,
-      audio : true,
+      video: true,
+      audio: true, // 녹화 시에만 오디오 추가
     });
     const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/mp4" });
 
@@ -82,8 +80,6 @@ function Introduce() {
       const url = URL.createObjectURL(videoBlob);
       setMediaBlobUrl(url);
       setIsPopupOpen(true); // 팝업 상태 활성화
-      // setMediaBlobUrl(URL.createObjectURL(videoBlob));
-      // setIsRecordingFinished(true); // 녹화 종료 상태 활성화
     };
 
     mediaRecorder.start();
@@ -169,19 +165,6 @@ function Introduce() {
             Stop Recording
           </button>
           <br />
-
-          {/* {isRecordingFinished && (
-            <div>
-              <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
-              <button className="startBtn" onClick={handleSubmit}>분석 요청</button>
-              <button className="startBtn" onClick={() => setIsRecordingFinished(false)}>취소</button>
-            </div>
-          )}
-          {mediaBlobUrl && (
-            <div>
-              <video src={mediaBlobUrl} controls></video>
-            </div>
-          )} */}
         </div>
       </div>
     
@@ -195,7 +178,6 @@ function Introduce() {
           </div>
         </div>
       )}
-      
     </div>
   );
 }
