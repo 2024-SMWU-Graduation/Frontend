@@ -9,8 +9,10 @@ import MyPage from './pages/MyPage';
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
 import Introduce from './pages/Introduce';
+import IntroduceEnd from './pages/IntroduceEnd';
 import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
+import QuestionEnd from './pages/QuestionEnd.js';
 import QuestionFeedback from './pages/QuestionFeedback';
 import {useEffect} from "react";
 import {setAxiosInterceptors} from "./axios";
@@ -31,9 +33,11 @@ function Main() {
                 <Route path="social-success" element={<AuthSuccess />} />
                 <Route path="register" element={<Register />} />
                 <Route path="introduce" element={<Introduce />} />
-                <Route path="introducefeedback" element={<IntroduceFeedback />} />
+                <Route path="introduce-end" element={<IntroduceEnd />} />
+                <Route path="introduce-feedback" element={<IntroduceFeedback />} />
                 <Route path="question" element={<Question />} />
-                <Route path="questionfeedback" element={<QuestionFeedback />} />
+                <Route path="question-end" element={<QuestionEnd />} />
+                <Route path="question-feedback" element={<QuestionFeedback />} />
               </Routes>
             </div>
           </div>

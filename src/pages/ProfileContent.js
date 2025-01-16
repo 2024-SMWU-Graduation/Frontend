@@ -1,4 +1,4 @@
-import './ProfileContent.css'
+import '../css/ProfileContent.css';
 import { api } from "../axios"
 import {useEffect, useState} from "react";
 import { formatDate } from "../utils/DateUtils";

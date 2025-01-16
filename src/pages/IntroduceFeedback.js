@@ -1,4 +1,4 @@
-import './IntroduceFeedback.css'
+import '../css/IntroduceFeedback.css';
 import React, {useRef, useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import axios from "axios";

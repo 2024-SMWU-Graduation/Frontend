@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
-import './LogIn.css';
+import '../css/LogIn.css';
 import {useAuth} from "../AuthContext";
 import {login} from "../authActions";
 

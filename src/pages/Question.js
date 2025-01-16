@@ -1,6 +1,6 @@
-import './Question.css'
-import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import '../css/Question.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
 
@@ -111,13 +111,8 @@ function Question() {
         headers: { "Content-type": "multipart/form-data", },
       });
 
-      // 결과를 다음 화면으로 전달
-      navigate('/introducefeedback', {
-        state: {
-          result: aiResponse.data.result,
-          videoUrl: videoUrl,
-        },
-      });
+      // 녹화 완료 페이지 이동
+      navigate('/question-end');
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");

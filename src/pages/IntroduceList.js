@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from "../axios"
-import './IntroduceList.css';
+import '../css/IntroduceList.css';
 import { formatDate } from "../utils/DateUtils";
 
 const VideoGrid = () => {
