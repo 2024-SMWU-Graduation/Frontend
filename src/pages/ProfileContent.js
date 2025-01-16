@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import { formatDate } from "../utils/DateUtils";
 import kakaoLogo from "../images/kakaoLogo.png"
 import naverLogo from "../images/naverLogo.png"
-import noonsong from "../components/noonsong.jpg"
+import noonsong from "../images/noonsong.jpg"
 
 const ProfileContent = () => {
     const [user, setUser] = useState();

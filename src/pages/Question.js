@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from "axios"; 
 import { api } from "../axios";
 
-import QuestionData from "../assets/QuestionData.js";
-import CategoryData from "../assets/CategoryData.js";
+import QuestionData from "../assets/data/QuestionData.js";
+import CategoryData from "../assets/data/CategoryData.js";
 
 function Question() {
   const navigate = useNavigate();
