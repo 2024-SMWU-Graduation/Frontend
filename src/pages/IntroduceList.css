@@ -1,3 +1,13 @@
+.video-container {
+    /*padding: 20px;*/
+}
+
+.video-count {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #333;
+}
+
 .video-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

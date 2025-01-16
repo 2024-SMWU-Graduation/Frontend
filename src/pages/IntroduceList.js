@@ -21,14 +21,17 @@ const VideoGrid = () => {
     }, []);
 
     return (
-        <div className="video-grid">
-            {videos && videos.map((video) => (
-                <div key={video.interviewId} className="video-item">
-                    <video src={video.videoUrl} controls width="100%" />
-                    <h3>{video.title}</h3>
-                    <p>{formatDate(video.createdAt)}</p>
-                </div>
-            ))}
+        <div className="video-container">
+            <h3 className="video-count">총 { videos ? videos.length : 0 }개의 면접 결과</h3>
+            <div className="video-grid">
+                {videos && videos.map((video) => (
+                    <div key={video.interviewId} className="video-item">
+                        <video src={video.videoUrl} controls width="100%"/>
+                        <h3>{video.title}</h3>
+                        <p>{ formatDate(video.createdAt) }</p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
