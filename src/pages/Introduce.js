@@ -112,12 +112,19 @@ function Introduce() {
         },
       });
 
-      const videoUrl = s3Response.data.data;
-
       // AI 분석 API 호출
       const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
         headers: { "Content-type": "multipart/form-data", },
       });
+      
+      // AI 분석 결과 백으로 보내는 코드
+      // const result = aiResponse.data.result
+      //
+      //
+      //
+      //
+      //
+      //
 
       // 녹화 완료 페이지 이동
       navigate('/introduce-end');

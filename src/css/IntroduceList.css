@@ -56,3 +56,29 @@
         grid-template-columns: 1fr;
     }
 }
+
+.title-edit-container{
+  
+}
+
+.title-input{
+  border-radius: 6px;
+  border-color: #666666;
+  background-color: #fff;
+  margin-left: 5px;
+}
+
+.save-btn{
+  margin: 2px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  color: #fff;
+  background: linear-gradient(45deg, #003087, #28448f);
+  border: none;
+  border-radius: 8px;
+  margin-left: 5px;
+}
+
+.title-container{
+
+}
