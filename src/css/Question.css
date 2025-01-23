@@ -70,15 +70,19 @@
 
 .video {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
-.startBtn, .stopBtn {
+.start-stop-Btn {
   margin: 5px;
   padding: 10px 20px;
   font-size: 1rem;
+  font-weight: bold;
   color: #fff;
   background-color: #003087;
   border: none;
@@ -87,7 +91,7 @@
   transition: background-color 0.3s ease;
 }
 
-.startBtn:hover, .stopBtn:hover {
+.start-stop-Btn:hover{
   background-color: #0056b3;
 }
 

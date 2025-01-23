@@ -164,10 +164,10 @@ function Question() {
         </div>
 
         <div className='video'>
-          <button className="startBtn" onClick={startRecording} disabled={isRecording}>
+          <button className="start-stop-Btn" onClick={startRecording} disabled={isRecording}>
             Start Recording
           </button>
-          <button className="stopBtn" onClick={stopRecording} disabled={!isRecording}>
+          <button className="start-stop-Btn" onClick={stopRecording} disabled={!isRecording}>
             Stop Recording
           </button>
           <br />
