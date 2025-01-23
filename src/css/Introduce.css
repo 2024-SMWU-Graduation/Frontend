@@ -34,12 +34,15 @@
 
 .video {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
-.startBtn, .stopBtn {
+.start-stop-Btn {
   margin: 5px;
   padding: 12px 24px;
   font-size: 1.1rem;
@@ -52,39 +55,33 @@
   transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.startBtn:hover, .stopBtn:hover {
+.start-stop-Btn:hover {
   background: linear-gradient(45deg, #28448f, #0056b3);
   transform: translateY(-3px);
-}
-
-.startBtn:active, .stopBtn:active {
-  transform: translateY(0);
 }
 
 .submit {
   margin-top: 20px;
 }
 
-.submit button {
+.submit-button {
+  margin: 5px;
   padding: 12px 24px;
   font-size: 1.1rem;
   font-weight: bold;
   color: #fff;
-  background: linear-gradient(45deg, #28448f, #99b6ec);
+  background: linear-gradient(45deg, #003087, #28448f);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.submit button:hover {
-  background: linear-gradient(45deg, #003087, #28448f);
+.submit-button:hover {
+  background: linear-gradient(45deg, #28448f, #0056b3);
   transform: translateY(-3px);
 }
 
-.submit button:active {
-  transform: translateY(0);
-}
 
 .result {
   margin-top: 20px;

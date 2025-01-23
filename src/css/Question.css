@@ -92,26 +92,30 @@
 }
 
 .start-stop-Btn:hover{
-  background-color: #0056b3;
+  background: linear-gradient(45deg, #28448f, #0056b3);
+  transform: translateY(-3px);
 }
 
 .submit {
   margin-top: 20px;
 }
 
-.submit button {
+.submit-button {
+  margin: 5px;
   padding: 10px 20px;
   font-size: 1rem;
+  font-weight: bold;
   color: #fff;
-  background-color: #28448f;
+  background-color: #003087;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submit button:hover {
-  background-color: #003087;
+.submit-button:hover {
+  background: linear-gradient(45deg, #28448f, #0056b3);
+  transform: translateY(-3px);
 }
 
 .result {
