@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { api } from "../axios"
-import {formatPercentage} from "../utils/FormatUtils";
 
 function Introduce() {
   const navigate = useNavigate();
@@ -107,13 +106,12 @@ function Introduce() {
       formData.append("file", videoBlob, "recorded-video.mp4");
 
       // S3 업로드 API 호출
-      const s3Response = await api.post("/interview/introduce", formData, {
+      const s3Response = await api.post("/interview", formData, {
         headers: {
           "Content-type": "multipart/form-data",
         },
       });
 
-      const videoUrl = s3Response.data.data.videoUrl;
       const interviewId = s3Response.data.data.interviewId;
 
       // AI 분석 API 호출
