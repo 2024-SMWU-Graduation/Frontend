@@ -176,7 +176,7 @@ function Introduce() {
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
-            <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+            <h3 className='intro'>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
             <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
             <button className="submit-button" onClick={handleSubmit}>분석 요청</button>
             <button className="submit-button" onClick={() => setIsPopupOpen(false)}>취소</button>

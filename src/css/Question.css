@@ -60,6 +60,13 @@
   font-weight: bold;
 }
 
+.record-warning {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  color: red;
+  font-weight: bold;
+}
+
 .webcam {
   margin-bottom: 20px;
   border: 2px solid #ccc;
@@ -122,4 +129,66 @@
   margin-top: 20px;
   font-size: 1.2rem;
   color: #333;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transform: scale(0.9);
+  animation: popIn 0.3s ease forwards;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .webcam {
+    width: 100%;
+    height: auto;
+  }
+  .startBtn, .stopBtn, .submit button {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  .intro {
+    font-size: 1.5rem;
+  }
 }

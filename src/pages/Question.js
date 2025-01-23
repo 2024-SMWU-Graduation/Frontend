@@ -17,6 +17,7 @@ function Question() {
 
   const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 버튼 상태
   const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
+  const [isRecordingText, setIsRecordingText] = useState("") // 녹화중 알림 텍스트 
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -84,6 +85,7 @@ function Question() {
     mediaRecorder.start();
     mediaRecorderRef.current = mediaRecorder;
     setIsRecording(true);
+    setIsRecordingText("녹화중");
   };
 
   // 녹화 중지 함수
@@ -92,6 +94,7 @@ function Question() {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
+    setIsRecordingText("녹화 종료")
   };
 
   const handleSubmit = async () => {
@@ -149,6 +152,9 @@ function Question() {
         <h2 className="selected-text">
           {selectedText}
         </h2>
+        <div className='record-warning'>
+          {isRecordingText}
+        </div>
         <br/>
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
@@ -177,7 +183,7 @@ function Question() {
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
-            <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+            <h3 className='intro'>녹화가 완료되었습니다. <br/> 분석을 요청하시겠습니까?</h3>
             <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
             <button className="submit-button" onClick={handleSubmit}>분석 요청</button>
             <button className="submit-button" onClick={() => setIsPopupOpen(false)}>취소</button>
