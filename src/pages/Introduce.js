@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { api } from "../axios"
+import {formatPercentage} from "../utils/FormatUtils";
 
 function Introduce() {
   const navigate = useNavigate();
@@ -112,19 +113,21 @@ function Introduce() {
         },
       });
 
+      const interviewId = s3Response.data.data.interviewId;
+
       // AI 분석 API 호출
       const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
         headers: { "Content-type": "multipart/form-data", },
       });
-      
-      // AI 분석 결과 백으로 보내는 코드
-      // const result = aiResponse.data.result
-      //
-      //
-      //
-      //
-      //
-      //
+
+      const modifiedData = {
+        interviewId: interviewId,
+        percentage: formatPercentage(aiResponse.data.result[0]),
+        timelines: aiResponse.data.result[1]
+      }
+
+      await api.post("/interview/feedback", modifiedData, {
+        headers: { "Content-Type": "application/json" }})
 
       // 녹화 완료 페이지 이동
       navigate('/introduce-end');
