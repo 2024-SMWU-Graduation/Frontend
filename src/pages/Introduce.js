@@ -107,7 +107,7 @@ function Introduce() {
       formData.append("file", videoBlob, "recorded-video.mp4");
 
       // S3 업로드 API 호출
-      const s3Response = await api.post("/interview", formData, {
+      const s3Response = await api.post("/interview/introduce", formData, {
         headers: {
           "Content-type": "multipart/form-data",
         },
@@ -126,7 +126,7 @@ function Introduce() {
         timelines: aiResponse.data.result[1]
       }
 
-      await api.post("/interview/feedback", modifiedData, {
+      await api.post("/feedback/introduce", modifiedData, {
         headers: { "Content-Type": "application/json" }})
 
       // 녹화 완료 페이지 이동

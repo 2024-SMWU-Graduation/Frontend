@@ -1,33 +1,33 @@
 import '../css/IntroduceFeedback.css';
 import { api } from "../axios"
-import React, {useRef, useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import React, { useRef, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 function Feedback() {
     const location = useLocation();
-    const {result, videoUrl} = location.state;
+    const id = location.state.id;
     const videoRef = useRef(null); //video 태그 제어
     const [apiResult, setApiResult] = useState(null);
 
-    // 백에서 영상 url, 표정분석 결과 url 받아서 변수에 저장
-    // const result = aiResponse.data.result
-    //
-    //
-    //
-    //
+    // 백에서 영상 url, 표정분석 결과 url 받가
+    useEffect(() => {
+      const fetchFeedback = async () => {
+          try {
+            const { data } = await api.get(`/feedback/introduce/${id}`);
 
-    // stt 분석 결과 url 백에서 받기
-    //
-    //
-    //
-    //
-    //
+            const feedback = {
+              videoUrl: data.data.videoUrl,
+              negativePercentage: data.data.negativePercentage,
+              timelines: data.data.timelines || [] ,
+            };
+            setApiResult(feedback);
+          } catch (error) {
+              console.error('데이터를 가져오는 중 오류 발생:', error);
+          }
+      };
 
-    // 부정 표정 퍼센트 추출
-    const extractPercentage = (result) => {
-        const match = result[0].match(/Negative.*?: (\d+(\.\d+)?)%/);
-        return match ? parseFloat(match[1]) : null;
-    };
+      fetchFeedback();
+    }, [id]);
 
     const analyzePercentage = (percentage) => {
         if (percentage >= 40) {
@@ -37,24 +37,28 @@ function Feedback() {
         }
     };
 
-    //타임스탬프 추출
-    const extractTimeStamps = (result) => {
-        if (!result || result.length < 2) return [];
-        return result[1].map((time) => {
-          // 시작 시간, 종료시간 추출
-          const match = time.match(/^(\d{2}):(\d{2}) - (\d{2}):(\d{2})$/); 
-          if (match) {
-            const startMinutes = parseInt(match[1], 10);
-            const startSeconds = parseInt(match[2], 10);
-            const endMinutes = parseInt(match[3], 10);
-            const endSeconds = parseInt(match[4], 10);
-            return {
-              start : startMinutes * 60 + startSeconds,
-              end : endMinutes * 60 + endSeconds,
-            };
-          }
-          return null; // 유효하지 않은 형식 제외
-        }).filter((time) => time !== null);
+    // 타임라인 렌더링
+    const renderTimelines = (timelines) => {
+      return timelines.map((timeline, index) => {
+        const [start, end] = timeline.split(' - ').map((time) => {
+          const [minutes, seconds] = time.split(':').map(Number);
+          return minutes * 60 + seconds;
+        });
+
+        return (
+          <li key={index}>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTimestampClick(start);
+              }}
+            >
+              {timeline}
+            </a>
+          </li>
+        );
+      });
     };
 
     // 타임스탬프 클릭
@@ -83,57 +87,30 @@ function Feedback() {
     //
     //
     //
-    //
-    //
-
-    console.log(result);
-    const percentage = extractPercentage(result);
-    console.log(percentage);
-    const message = analyzePercentage(percentage);
-    const timeStamps = extractTimeStamps(result);
-
-    if (!result) {
-        return <div>결과 조회에 실패했습니다.</div>
-    }
 
     return (
-        <div>
-            <div className='content'>
-                <div className='videoArea'>
-                    <video ref={videoRef} src={videoUrl} controls preload="auto"></video>
-                </div>
-                <div className='feedbackArea'>
-                    <h3>인터뷰 분석 완료!</h3>
-                    <p className='mainFeedbackText'> {message} </p>
-                    <p>
-                        {result[0]}
-                    </p>
-                    <p>[부정 표정 확인하기]</p>
-                    {timeStamps && timeStamps.length > 0 ? (
-                        <ul>
-                            {timeStamps.map((time, index) => (
-                                <li key={index}>
-                                  <a
-                                    href="#"
-                                    onClick={(e) => {
-                                    e.preventDefault();
-                                    handleTimestampClick(time.start);
-                                    }}
-                                  >
-                                    {Math.floor(time.start / 60).toString().padStart(2, '0')}:{(time.start % 60).toString().padStart(2, '0')}
-                                    ~
-                                    {Math.floor(time.end / 60).toString().padStart(2, '0')}:{(time.end % 60).toString().padStart(2, '0')}
-                                  </a>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>시간대 정보 없음</p>
-                    )}
-                    {/* stt 분석 결과 띄우기 */}
-                </div>
-            </div>
+      <div>
+      {apiResult ? (
+        <div className="content">
+          <div className="videoArea">
+            <video ref={videoRef} src={apiResult.videoUrl} controls preload="auto"></video>
+          </div>
+          <div className="feedbackArea">
+            <h3>인터뷰 분석 완료!</h3>
+            <p className="mainFeedbackText">{analyzePercentage(apiResult.negativePercentage)}</p>
+            <p>부정 퍼센트: {apiResult.negativePercentage}%</p>
+            <p>[부정 표정 확인하기]</p>
+            {apiResult.timelines.length > 0 ? (
+              <ul>{renderTimelines(apiResult.timelines)}</ul>
+            ) : (
+              <p>시간대 정보 없음</p>
+            )}
+          </div>
         </div>
+      ) : (
+        <p>데이터를 불러오는 중입니다...</p>
+      )}
+    </div>
     );
 };
 

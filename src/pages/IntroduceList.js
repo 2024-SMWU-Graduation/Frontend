@@ -13,9 +13,8 @@ const VideoGrid = () => {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const response = await api.get('/interview');
+                const response = await api.get('/interview/introduce');
                 setVideos(response.data.data.responseDtoList);
-                // console.log(response.data.totalInterview);
             } catch (error) {
                 console.error('비디오를 가져오는 중 오류 발생:', error);
             }
@@ -33,7 +32,7 @@ const VideoGrid = () => {
     const handleSaveClick = async (id) => {
       try {
           // API를 호출하여 제목 업데이트
-          await api.patch(`/interview/title`, { interviewId: id, title: newTitle }); 
+          await api.patch('/interview/introduce/title', { interviewId: id, title: newTitle }); 
           // 경로 변경 (/interview/introduce/title)
 
           // 상태를 업데이트하여 화면에 즉시 반영
@@ -51,7 +50,9 @@ const VideoGrid = () => {
 
     // 피드백 페이지로 이동
     const handleTitleClick = (id) => {
-      navigate(`/introduce-feedback`);
+      navigate(`/introduce-feedback`, {
+        state : { id },
+      });
     };
 
     return (
