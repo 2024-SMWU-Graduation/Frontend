@@ -32,6 +32,11 @@ function Question() {
     } else {
       setSelectedText("해당 카테고리에 질문이 없습니다.");
     }
+
+    // 3초 후 녹화 시작
+    setTimeout(() => {
+      startRecording();
+    }, 3000);
   }
 
   //사용자 웹캠에 접근
@@ -125,6 +130,9 @@ function Question() {
         <h2 className='intro'>
           아래 직무별 버튼 중 한가지를 클릭하여 질문을 확인하세요.
         </h2>
+        <div className='question-wargning-text'>
+          질문이 제시되면 3초 후 녹화가 시작됩니다. 답변을 준비해주세요.
+        </div>
         <br/>
         <div className='catergory-buttons'>
           {CategoryData.map((category, index) => (
