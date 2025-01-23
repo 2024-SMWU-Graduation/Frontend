@@ -17,6 +17,7 @@ function Question() {
 
   const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 버튼 상태
   const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
+  const [isRecordingText, setIsRecordingText] = useState("") // 녹화중 알림 텍스트 
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -32,6 +33,11 @@ function Question() {
     } else {
       setSelectedText("해당 카테고리에 질문이 없습니다.");
     }
+
+    // 3초 후 녹화 시작
+    setTimeout(() => {
+      startRecording();
+    }, 3000);
   }
 
   //사용자 웹캠에 접근
@@ -79,6 +85,7 @@ function Question() {
     mediaRecorder.start();
     mediaRecorderRef.current = mediaRecorder;
     setIsRecording(true);
+    setIsRecordingText("녹화중");
   };
 
   // 녹화 중지 함수
@@ -87,6 +94,7 @@ function Question() {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
+    setIsRecordingText("녹화 종료")
   };
 
   const handleSubmit = async () => {
@@ -125,6 +133,9 @@ function Question() {
         <h2 className='intro'>
           아래 직무별 버튼 중 한가지를 클릭하여 질문을 확인하세요.
         </h2>
+        <div className='question-wargning-text'>
+          질문이 제시되면 3초 후 녹화가 시작됩니다. 답변을 준비해주세요.
+        </div>
         <br/>
         <div className='catergory-buttons'>
           {CategoryData.map((category, index) => (
@@ -141,6 +152,9 @@ function Question() {
         <h2 className="selected-text">
           {selectedText}
         </h2>
+        <div className='record-warning'>
+          {isRecordingText}
+        </div>
         <br/>
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
@@ -156,10 +170,10 @@ function Question() {
         </div>
 
         <div className='video'>
-          <button className="startBtn" onClick={startRecording} disabled={isRecording}>
+          <button className="start-stop-Btn" onClick={startRecording} disabled={isRecording}>
             Start Recording
           </button>
-          <button className="stopBtn" onClick={stopRecording} disabled={!isRecording}>
+          <button className="start-stop-Btn" onClick={stopRecording} disabled={!isRecording}>
             Stop Recording
           </button>
           <br />
@@ -169,10 +183,10 @@ function Question() {
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
-            <h3>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+            <h3 className='intro'>녹화가 완료되었습니다. <br/> 분석을 요청하시겠습니까?</h3>
             <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
-            <button className="startBtn" onClick={handleSubmit}>분석 요청</button>
-            <button className="startBtn" onClick={() => setIsPopupOpen(false)}>취소</button>
+            <button className="submit-button" onClick={handleSubmit}>분석 요청</button>
+            <button className="submit-button" onClick={() => setIsPopupOpen(false)}>취소</button>
           </div>
         </div>
       )}
