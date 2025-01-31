@@ -33,7 +33,6 @@ const VideoGrid = () => {
       try {
           // API를 호출하여 제목 업데이트
           await api.patch('/interview/introduce/title', { interviewId: id, title: newTitle }); 
-          // 경로 변경 (/interview/introduce/title)
 
           // 상태를 업데이트하여 화면에 즉시 반영
           setVideos((prevVideos) =>
@@ -47,6 +46,19 @@ const VideoGrid = () => {
           console.error('제목 업데이트 중 오류 발생:', error);
       }
     };
+
+    // 동영상 삭제하기
+    const handleDeleteClick = async (id) => {
+      if (!window.confirm("동영상을 삭제하시겠습니까?")) return; // 사용자 확인
+  
+      try {
+          await api.delete(`/interview/introduce/${id}`); // DELETE 요청
+          // 화면에 즉시 반영
+          setVideos((prevVideos) => prevVideos.filter((video) => video.interviewId !== id));
+      } catch (error) {
+          console.error("비디오 삭제 중 오류 발생:", error);
+      }
+  };
 
     // 피드백 페이지로 이동
     const handleTitleClick = (id) => {
@@ -77,18 +89,23 @@ const VideoGrid = () => {
                         ) : (
                             <div className="title-container">
                                 <h3
-                                    className="video-title"
-                                    onClick={() => handleTitleClick(video.interviewId)}
-                                    style={{ cursor: 'pointer' }}
+                                  className="video-title"
+                                  onClick={() => handleTitleClick(video.interviewId)}
+                                  style={{ cursor: 'pointer' }}
                                 >
-                                    {video.title}
+                                  {video.title}
                                 </h3>
                                 <span
-                                    className="edit-icon"
-                                    onClick={() => handleEditClick(video.interviewId, video.title)}
-                                    style={{ cursor: 'pointer', marginLeft: '10px' }}
-                                >
-                                    ✏️
+                                  className="edit-icon"
+                                  onClick={() => handleEditClick(video.interviewId, video.title)}
+                                  style={{ cursor: 'pointer', marginLeft: '10px' }}
+                                > ✏️
+                                </span>
+                                <span
+                                  className="delete-icon"
+                                  onClick={() => handleDeleteClick(video.interviewId)}
+                                  style={{ cursor: 'pointer', marginLeft: '10px', color: 'red' }}
+                                > ❌
                                 </span>
                             </div>
                         )}

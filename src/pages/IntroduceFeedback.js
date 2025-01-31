@@ -9,7 +9,7 @@ function Feedback() {
     const videoRef = useRef(null); //video 태그 제어
     const [apiResult, setApiResult] = useState(null);
 
-    // 백에서 영상 url, 표정분석 결과 url 받가
+    // 백에서 영상 url, 표정분석 결과 url 받기
     useEffect(() => {
       const fetchFeedback = async () => {
           try {
