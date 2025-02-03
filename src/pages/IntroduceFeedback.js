@@ -30,6 +30,7 @@ function Feedback() {
       fetchFeedback();
     }, [id]);
 
+    // 부정-긍정 판단
     const analyzePercentage = (percentage) => {
         if (percentage >= 40) {
             return "부정적인 표정을 많이 지으셨네요 😥"
