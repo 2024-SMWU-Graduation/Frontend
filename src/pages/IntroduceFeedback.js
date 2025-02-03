@@ -19,6 +19,7 @@ function Feedback() {
               videoUrl: data.data.videoUrl,
               negativePercentage: data.data.negativePercentage,
               timelines: data.data.timelines || [] ,
+              //analyzeLink : data.data.analyzeLink,
             };
             setApiResult(feedback);
           } catch (error) {
@@ -81,13 +82,7 @@ function Feedback() {
       }
     }
 
-    // stt 분석 텍스트 받은거 띄우는 코드
-    //
-    //
-    //
-    //
-    //
-
+  
     return (
       <div>
       {apiResult ? (
@@ -97,14 +92,15 @@ function Feedback() {
           </div>
           <div className="feedbackArea">
             <h3>인터뷰 분석 완료!</h3>
-            <p className="mainFeedbackText">{analyzePercentage(apiResult.negativePercentage)}</p>
+            <p className="mainFeedbackText">[부정 표정 확인하기]</p>
+            <p>{analyzePercentage(apiResult.negativePercentage)}</p>
             <p>부정 퍼센트: {apiResult.negativePercentage}%</p>
-            <p>[부정 표정 확인하기]</p>
             {apiResult.timelines.length > 0 ? (
               <ul>{renderTimelines(apiResult.timelines)}</ul>
             ) : (
               <p>시간대 정보 없음</p>
             )}
+            <p className='mainFeedbackText'>[AI 답변 분석 피드백 확인하기]</p>
           </div>
         </div>
       ) : (
