@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { api } from "../axios"
 import {formatPercentage} from "../utils/FormatUtils";
+import Loading from '../components/Loading';
 
 function Introduce() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function Introduce() {
   const [timeLeft, setTimeLeft] = useState(60); //타이머
   const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
+  const [loading, setLoading] = useState(false); // 로딩 팝업
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -98,10 +100,15 @@ function Introduce() {
     stopTimer();
   };
 
+  // 분석 요청
   const handleSubmit = async () => {
     if (!videoBlob) {
       return alert("녹화된 영상이 없습니다.");
     }
+    
+    // 페이지 로딩 팝업 띄우기
+    setLoading(true);
+
     try {
       const formData = new FormData();
       formData.append("file", videoBlob, "recorded-video.mp4");
@@ -129,6 +136,7 @@ function Introduce() {
       await api.post("/feedback/introduce", modifiedData, {
         headers: { "Content-Type": "application/json" }})
 
+
       // 녹화 완료 페이지 이동
       navigate('/introduce-end');
     } catch (error) {
@@ -148,6 +156,10 @@ function Introduce() {
           <br/>
           {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
+
+        <div>
+          {loading ? <Loading /> : null}
+        </div>
 
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
