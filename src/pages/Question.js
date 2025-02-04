@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
+import {formatPercentage} from "../utils/FormatUtils";
 
 import QuestionData from "../assets/data/QuestionData.js";
 import CategoryData from "../assets/data/CategoryData.js";
@@ -18,6 +19,7 @@ function Question() {
   const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 버튼 상태
   const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
   const [isRecordingText, setIsRecordingText] = useState("") // 녹화중 알림 텍스트 
+  const [randomInterviewId, setRandomInterviewId] = useState("") // 아이디값
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -74,6 +76,12 @@ function Question() {
       }
     };
 
+    // 백으로 디비 생성 요청, 인터뷰 아이디 받아오기
+    const startRequest = await api.post("/interview/random", {
+    });
+    const randomInterviewId = startRequest.data.data.randomInterviewId;
+    setRandomInterviewId(randomInterviewId);
+
     mediaRecorder.onstop = () => {
       const videoBlob = new Blob(recordedChunks.current, { type: "video/mp4" });
       setVideoBlob(videoBlob); //녹화된 영상 Blob 저장
@@ -97,34 +105,54 @@ function Question() {
     setIsRecordingText("녹화 종료")
   };
 
+  // 분석 요청
   const handleSubmit = async () => {
     if (!videoBlob) {
       return alert("녹화된 영상이 없습니다.");
-    }
+    };
+
     try {
+      const videoFormData = new FormData();
+      videoFormData.append("file", videoBlob, "recorded-video.mp4");
+
+      // AI 분석 API 호출
+      const aiResponse = await axios.post("http://localhost:8081/upload", videoFormData, {
+        headers: { "Content-type": "multipart/form-data", },
+      });
+
       const formData = new FormData();
       formData.append("file", videoBlob, "recorded-video.mp4");
 
+      // JSON 데이터를 문자열로 변환해서 추가
+      const jsonData = JSON.stringify({
+        interviewId: randomInterviewId,
+        questionData: selectedText,
+      });
+      formData.append("requestDto", new Blob([jsonData], { type: "application/json" }));
+
       // S3 업로드 API 호출
-      const s3Response = await api.post("/interview", formData, {
+      const s3Response = await api.post("/interview/random/question", formData, {
         headers: {
           "Content-type": "multipart/form-data",
         },
       });
 
-      const videoUrl = s3Response.data.data;
+      const modifiedData = {
+        interviewId: randomInterviewId,
+        percentage: formatPercentage(aiResponse.data.result[0]),
+        timelines: aiResponse.data.result[1]
+      };
 
-      // AI 분석 API 호출
-      const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
-        headers: { "Content-type": "multipart/form-data", },
+      await api.post("/feedback/random", modifiedData, {
+        headers: { "Content-Type": "application/json" }
       });
 
       // 녹화 완료 페이지 이동
-      navigate('/question-end');
+      // navigate('/introduce-end');
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");
-    }
+    };
   };
 
   return (
