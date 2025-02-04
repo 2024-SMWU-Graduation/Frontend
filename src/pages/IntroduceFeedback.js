@@ -8,27 +8,67 @@ function Feedback() {
     const id = location.state.id;
     const videoRef = useRef(null); //video 태그 제어
     const [apiResult, setApiResult] = useState(null);
+    const [analyzeData, setAnalyzeData] = useState(null);
 
     // 백에서 영상 url, 표정분석 결과 url 받기
     useEffect(() => {
       const fetchFeedback = async () => {
-          try {
-            const { data } = await api.get(`/feedback/introduce/${id}`);
-
+        try {
+          const response = await api.get(`/feedback/introduce/${id}`);
+          console.log("API 응답:", response); // 전체 응답 확인
+          console.log("응답 데이터:", response.data); // 실제 데이터 확인
+    
+          if (response.data && response.data.data) {
             const feedback = {
-              videoUrl: data.data.videoUrl,
-              negativePercentage: data.data.negativePercentage,
-              timelines: data.data.timelines || [] ,
-              //analyzeLink : data.data.analyzeLink,
+              videoUrl: response.data.data.videoUrl,
+              negativePercentage: response.data.data.negativePercentage,
+              timelines: response.data.data.timelines || [],
+              analyzeLink: response.data.data.analyzeLink,
             };
             setApiResult(feedback);
-          } catch (error) {
-              console.error('데이터를 가져오는 중 오류 발생:', error);
+          } else {
+            console.error("API 응답이 예상한 형식이 아닙니다:", response.data);
           }
+        } catch (error) {
+          console.error("데이터를 가져오는 중 오류 발생:", error);
+        }
       };
-
       fetchFeedback();
     }, [id]);
+
+    // json 파일 데이터 저장하기
+    useEffect(() => {
+      if (!apiResult?.analyzeLink) return;
+    
+      const fetchAnalyzeData = async () => {
+        try {
+          const response = await fetch(apiResult.analyzeLink);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+          const jsonData = await response.json();
+          console.log("✅ AI 분석 결과 데이터:", jsonData);
+          setAnalyzeData(jsonData);
+        } catch (error) {
+          console.error("❌ AI 분석 데이터를 불러오는 중 오류 발생:", error);
+        }
+      };
+    
+      fetchAnalyzeData();
+    }, [apiResult?.analyzeLink]);
+
+    // 피드백 json 렌더링
+    const renderAnalyzeResults = (analyzeData) => {
+      if (!analyzeData) return <p>AI 분석 결과가 없습니다.</p>;
+    
+      return (
+        <div className="analyzeResults">
+          <h3>AI 분석 결과</h3>
+          <p><strong>원본 대본:</strong> {analyzeData.original_script}</p>
+          <p><strong>피드백:</strong> {analyzeData.feedback}</p>
+        </div>
+      );
+    };
+
 
     // 부정-긍정 판단
     const analyzePercentage = (percentage) => {
@@ -102,6 +142,7 @@ function Feedback() {
               <p>시간대 정보 없음</p>
             )}
             <p className='mainFeedbackText'>[AI 답변 분석 피드백 확인하기]</p>
+            {analyzeData ? renderAnalyzeResults(analyzeData) : <p>AI 분석 데이터를 불러오는 중...</p>}
           </div>
         </div>
       ) : (
