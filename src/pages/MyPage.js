@@ -1,10 +1,16 @@
 import '../css/MyPage.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import VideoGrid from "./IntroduceList";
 import ProfileContent from "./ProfileContent";
 
 const MyPage = () => {
-    const [selectedMenu, setSelectedMenu] = useState('profile');
+    const [selectedMenu, setSelectedMenu] = useState(() => {
+      return localStorage.getItem('selectedMenu') || 'profile';
+    });
+
+    useEffect(() => {
+      localStorage.setItem('selectedMenu', selectedMenu);
+    }, [selectedMenu]);
 
     return (
         <div className="my-page">
