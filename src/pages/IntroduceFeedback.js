@@ -2,6 +2,7 @@ import '../css/IntroduceFeedback.css';
 import { api } from "../axios"
 import React, { useRef, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import parseFeedback from '../utils/ParseFeedback';
 
 function Feedback() {
     const location = useLocation();
@@ -59,16 +60,7 @@ function Feedback() {
     // 피드백 json 렌더링
     const renderAnalyzeResults = (analyzeData) => {
       if (!analyzeData) return <p>AI 분석 결과가 없습니다.</p>;
-    
-      return (
-        <div className="analyzeResults">
-          <h3>AI 분석 결과</h3>
-          <p><strong>원본 대본:</strong> {analyzeData.original_script}</p>
-          <p><strong>피드백:</strong> {analyzeData.feedback}</p>
-        </div>
-      );
     };
-
 
     // 부정-긍정 판단
     const analyzePercentage = (percentage) => {
@@ -123,7 +115,6 @@ function Feedback() {
       }
     }
 
-  
     return (
       <div>
       {apiResult ? (
@@ -142,7 +133,11 @@ function Feedback() {
               <p>시간대 정보 없음</p>
             )}
             <p className='mainFeedbackText'>[AI 답변 분석 피드백 확인하기]</p>
-            {analyzeData ? renderAnalyzeResults(analyzeData) : <p>AI 분석 데이터를 불러오는 중...</p>}
+            <div className='feedback-script-title'>✏️ 원본 대본</div>
+            <p>
+              {analyzeData.original_script}
+            </p>
+            {parseFeedback(analyzeData.feedback)}
           </div>
         </div>
       ) : (
