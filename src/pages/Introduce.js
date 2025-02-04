@@ -136,8 +136,10 @@ function Introduce() {
       await api.post("/feedback/introduce", modifiedData, {
         headers: { "Content-Type": "application/json" }})
 
+        setLoading(false);
+
       // 녹화 완료 페이지 이동
-      navigate('/interview-end');
+      navigate('/introduce-end');
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");

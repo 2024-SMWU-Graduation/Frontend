@@ -24,7 +24,6 @@ function Question() {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunks = useRef([]); //녹화된 영상 데이터
-  const intervalRef = useRef(null);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category); // 선택한 카테고리 업데이트
@@ -148,8 +147,7 @@ function Question() {
       });
 
       // 추가질문 페이지로 이동
-      // 
-      // 
+      navigate('/question-second');
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");

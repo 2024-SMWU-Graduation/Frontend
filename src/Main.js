@@ -12,7 +12,9 @@ import Introduce from './pages/Introduce';
 import InterviewEnd from './pages/InterviewEnd';
 import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
+import QuestionSecond from './pages/QuestionSecond';
 import QuestionFeedback from './pages/QuestionFeedback';
+
 import {useEffect} from "react";
 import {setAxiosInterceptors} from "./axios";
 import {logout} from "./authActions";
@@ -35,6 +37,7 @@ function Main() {
                 <Route path="interview-end" element={<InterviewEnd />} />
                 <Route path="introduce-feedback" element={<IntroduceFeedback />} />
                 <Route path="question" element={<Question />} />
+                <Route path="question-second" element={<QuestionSecond />} />
                 <Route path="question-feedback" element={<QuestionFeedback />} />
               </Routes>
             </div>
