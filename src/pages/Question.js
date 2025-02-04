@@ -147,8 +147,9 @@ function Question() {
         headers: { "Content-Type": "application/json" }
       });
 
-      // 녹화 완료 페이지 이동
-      // navigate('/introduce-end');
+      // 추가질문 페이지로 이동
+      // 
+      // 
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");

@@ -1,6 +1,6 @@
-import '../css/IntroduceEnd.css';
+import '../css/InterviewEnd.css';
 
-function IntroduceEnd() {
+function InterviewEnd() {
 
   return (
     <div>
@@ -17,4 +17,4 @@ function IntroduceEnd() {
   );
 };
 
-export default IntroduceEnd;
+export default InterviewEnd;
