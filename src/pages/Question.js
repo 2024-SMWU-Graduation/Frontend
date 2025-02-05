@@ -7,7 +7,6 @@ import {formatPercentage} from "../utils/FormatUtils";
 
 import QuestionData from "../assets/data/QuestionData.js";
 import CategoryData from "../assets/data/CategoryData.js";
-import useMoveScrool from '../utils/UseMoveScroll';
 
 function Question() {
   const navigate = useNavigate();
