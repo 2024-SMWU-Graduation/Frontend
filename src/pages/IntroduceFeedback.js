@@ -26,7 +26,9 @@ function Feedback() {
               timelines: response.data.data.timelines || [],
               analyzeLink: response.data.data.analyzeLink,
             };
+            console.log("🎯 설정된 feedback:", feedback);
             setApiResult(feedback);
+            console.log("🔥 setApiResult 호출됨!");
           } else {
             console.error("API 응답이 예상한 형식이 아닙니다:", response.data);
           }
@@ -39,8 +41,9 @@ function Feedback() {
 
     // json 파일 데이터 저장하기
     useEffect(() => {
-      if (!apiResult?.analyzeLink) return;
-    
+      if (apiResult === null) return; // apiResult가 설정되지 않았다면 실행하지 않음
+
+      console.log("🔥 apiResult 업데이트 확인:", apiResult);
       const fetchAnalyzeData = async () => {
         try {
           const response = await fetch(apiResult.analyzeLink);
@@ -135,9 +138,15 @@ function Feedback() {
             <p className='mainFeedbackText'>[AI 답변 분석 피드백 확인하기]</p>
             <div className='feedback-script-title'>✏️ 원본 대본</div>
             <p>
-              {analyzeData.original_script}
+              {analyzeData?.original_script ? (
+                <div>
+                  <p>{analyzeData.original_script}</p>
+                  {parseFeedback(analyzeData.feedback)}
+                </div>
+                ) : (
+                  <p>데이터를 불러오는 중입니다...</p>
+              )}
             </p>
-            {parseFeedback(analyzeData.feedback)}
           </div>
         </div>
       ) : (
