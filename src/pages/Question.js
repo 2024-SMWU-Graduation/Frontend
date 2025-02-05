@@ -19,7 +19,8 @@ function Question() {
   const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 버튼 상태
   const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
   const [isRecordingText, setIsRecordingText] = useState("") // 녹화중 알림 텍스트 
-  const [randomInterviewId, setRandomInterviewId] = useState("") // 아이디값
+  const [randomInterviewId, setRandomInterviewId] = useState("") // 인터뷰 아이디값
+  const [randomQuestionId, setRandomQuestionId] = useState("") // 퀘스천 아이디값
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -136,13 +137,17 @@ function Question() {
         },
       });
 
+      // question id 받아오기
+      const randomQuestionId = s3Response.data.data.questionId;
+      setRandomQuestionId(randomQuestionId);
+      
       const modifiedData = {
-        interviewId: randomInterviewId,
+        questionId: randomQuestionId,
         percentage: formatPercentage(aiResponse.data.result[0]),
         timelines: aiResponse.data.result[1]
       };
 
-      await api.post("/feedback/random", modifiedData, {
+      await api.post("/feedback/random/question", modifiedData, {
         headers: { "Content-Type": "application/json" }
       });
 
