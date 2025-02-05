@@ -10,6 +10,7 @@ function Feedback() {
     const videoRef = useRef(null); //video 태그 제어
     const [apiResult, setApiResult] = useState(null);
     const [analyzeData, setAnalyzeData] = useState(null);
+    const [activeTab, setActiveTab] = useState(0);
 
     // 백에서 영상 url, 표정분석 결과 url 받기
     useEffect(() => {
@@ -126,8 +127,40 @@ function Feedback() {
             <video ref={videoRef} src={apiResult.videoUrl} controls preload="auto"></video>
           </div>
           <div className="feedbackArea">
+            <div className='tabs'>
+              <button className={activeTab === 0 ? "active" : ""} onClick={() => setActiveTab(0)}>표정 분석</button>
+              <button className={activeTab === 1 ? "active" : ""} onClick={() => setActiveTab(1)}>AI 답변 분석</button>
+            </div>
             <h3>인터뷰 분석 완료!</h3>
-            <p className="mainFeedbackText">[부정 표정 확인하기]</p>
+            <div className="tabContent">
+              {activeTab === 0 && (
+                <>
+                  <p className="mainFeedbackText">[부정 표정 확인하기]</p>
+                  <p>{analyzePercentage(apiResult.negativePercentage)}</p>
+                  <p>부정 퍼센트: {apiResult.negativePercentage}%</p>
+                  {apiResult.timelines.length > 0 ? (
+                    <ul>{renderTimelines(apiResult.timelines)}</ul>
+                  ) : (
+                    <p>시간대 정보 없음</p>
+                  )}
+                </>
+              )}
+              {activeTab === 1 && (
+                <>
+                  <p className="mainFeedbackText">[AI 답변 분석 피드백 확인하기]</p>
+                  <div className="feedback-script-title">✏️ 원본 대본</div>
+                  {analyzeData?.original_script ? (
+                    <div>
+                      <p>{analyzeData.original_script}</p>
+                      {parseFeedback(analyzeData.feedback)}
+                    </div>
+                  ) : (
+                    <p>데이터를 불러오는 중입니다...</p>
+                  )}
+                </>
+              )}
+            </div>
+            {/* <p className="mainFeedbackText">[부정 표정 확인하기]</p>
             <p>{analyzePercentage(apiResult.negativePercentage)}</p>
             <p>부정 퍼센트: {apiResult.negativePercentage}%</p>
             {apiResult.timelines.length > 0 ? (
@@ -146,13 +179,13 @@ function Feedback() {
                 ) : (
                   <p>데이터를 불러오는 중입니다...</p>
               )}
-            </p>
+            </p> */}
           </div>
         </div>
       ) : (
         <p>데이터를 불러오는 중입니다...</p>
       )}
-    </div>
+      </div>
     );
 };
 
