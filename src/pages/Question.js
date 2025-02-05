@@ -7,6 +7,7 @@ import {formatPercentage} from "../utils/FormatUtils";
 
 import QuestionData from "../assets/data/QuestionData.js";
 import CategoryData from "../assets/data/CategoryData.js";
+import useMoveScrool from '../utils/UseMoveScroll';
 
 function Question() {
   const navigate = useNavigate();
@@ -159,6 +160,12 @@ function Question() {
     };
   };
 
+  // 스크롤 이동
+  const element = useRef();
+  const onMoveToElement = () => {
+    element.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <div>
       <div className='question-wrapper'>
@@ -170,17 +177,16 @@ function Question() {
         </div>
         <br/>
         <div className='catergory-buttons'>
-          {CategoryData.map((category, index) => (
+          {!selectedCategory && CategoryData.map((category, index) => (
             <button
               key={index}
               className={`category-button ${selectedCategory === category ? 'selected' : ''}`}
-              onClick={() => handleCategorySelect(category)}
+              onClick={() => { handleCategorySelect(category); onMoveToElement(); }}
             >
-            {category}
+              {category}
             </button>
           ))}
         </div>
-        <br/>
         <h2 className="selected-text">
           {selectedText}
         </h2>
@@ -188,7 +194,7 @@ function Question() {
           {isRecordingText}
         </div>
         <br/>
-        <div style={{ position: "relative", width: "640px", height: "480px", }}>
+        <div style={{ position: "relative", width: "640px", height: "480px", }} ref={element}>
           <video ref={videoRef} />
           <div
             style={{
