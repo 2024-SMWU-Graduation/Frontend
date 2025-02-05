@@ -1,6 +1,6 @@
 import '../css/QuestionSecond.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
 import {formatPercentage} from "../utils/FormatUtils";
@@ -15,16 +15,35 @@ function QuestionSecond() {
 
   const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
   const [randomInterviewId, setRandomInterviewId] = useState("") // 아이디값
+  const [tailQuestion, setTailQuestion] = useState("") // 추가 질문
+
+  const location = useLocation();
+  const firstInterviewId = location.state.id; // 첫번째 동영상 아이디값
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunks = useRef([]); //녹화된 영상 데이터
 
   // 추가질문 받아오기
-  //
-  //
-  //
-  //
+  useEffect(() => {
+    const getTailQuestion = async () => {
+        try {
+            const tail = await api.get(`/interview/random/${firstInterviewId}/question/tail`);
+            console.log(tail.data.data);
+
+            if (tail.data.data.success) {
+              setTailQuestion(tail.data.data.questionData);
+            } else {
+              setTimeout(getTailQuestion, 5000); // 5초 후 다시 요청
+            }
+            console.log(tailQuestion);
+        } catch (error) {
+            console.error('꼬리질문 가져오는 중 오류 발생:', error);
+        }
+    };
+
+    getTailQuestion();
+  }, []);
 
   //사용자 웹캠에 접근
   const getUserCamera = () =>{
@@ -91,37 +110,37 @@ function QuestionSecond() {
       const videoFormData = new FormData();
       videoFormData.append("file", videoBlob, "recorded-video.mp4");
 
-      // AI 분석 API 호출
-      const aiResponse = await axios.post("http://localhost:8081/upload", videoFormData, {
-        headers: { "Content-type": "multipart/form-data", },
-      });
+      // // AI 분석 API 호출
+      // const aiResponse = await axios.post("http://localhost:8081/upload", videoFormData, {
+      //   headers: { "Content-type": "multipart/form-data", },
+      // });
 
-      const formData = new FormData();
-      formData.append("file", videoBlob, "recorded-video.mp4");
+      // const formData = new FormData();
+      // formData.append("file", videoBlob, "recorded-video.mp4");
 
-      // JSON 데이터를 문자열로 변환해서 추가
-      const jsonData = JSON.stringify({
-        interviewId: randomInterviewId,
-        questionData: selectedText, 
-      });
-      formData.append("requestDto", new Blob([jsonData], { type: "application/json" }));
+      // // JSON 데이터를 문자열로 변환해서 추가
+      // const jsonData = JSON.stringify({
+      //   interviewId: randomInterviewId,
+      //   questionData: selectedText, 
+      // });
+      // formData.append("requestDto", new Blob([jsonData], { type: "application/json" }));
 
-      // S3 업로드 API 호출
-      const s3Response = await api.post("/interview/random/question", formData, {
-        headers: {
-          "Content-type": "multipart/form-data",
-        },
-      });
+      // // S3 업로드 API 호출
+      // const s3Response = await api.post("/interview/random/question", formData, {
+      //   headers: {
+      //     "Content-type": "multipart/form-data",
+      //   },
+      // });
 
-      const modifiedData = {
-        interviewId: randomInterviewId,
-        percentage: formatPercentage(aiResponse.data.result[0]),
-        timelines: aiResponse.data.result[1]
-      };
+      // const modifiedData = {
+      //   interviewId: randomInterviewId,
+      //   percentage: formatPercentage(aiResponse.data.result[0]),
+      //   timelines: aiResponse.data.result[1]
+      // };
 
-      await api.post("/feedback/random", modifiedData, {
-        headers: { "Content-Type": "application/json" }
-      });
+      // await api.post("/feedback/random", modifiedData, {
+      //   headers: { "Content-Type": "application/json" }
+      // });
 
       // 녹화 완료 페이지 이동
       navigate('/interview-end');
@@ -134,8 +153,8 @@ function QuestionSecond() {
   return (
     <div>
       <div className='question-wrapper'>
-      <h2 className='intro'>
-          추가질문 텍스트 자리
+        <h2 className='intro'>
+          {tailQuestion ? tailQuestion : "추가질문 생성중"}
           <br/>
         </h2>
 

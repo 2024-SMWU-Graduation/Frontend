@@ -150,9 +150,13 @@ function Question() {
       await api.post("/feedback/random/question", modifiedData, {
         headers: { "Content-Type": "application/json" }
       });
-
+      
       // 추가질문 페이지로 이동
-      navigate('/question-second');
+      navigate('/question-second', {
+        state: {
+          id: `${randomInterviewId}`,
+        },
+      });
     } catch (error) {
       console.error("에러 발생:", error);
       alert("요청에 실패했습니다.");
