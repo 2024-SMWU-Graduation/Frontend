@@ -191,6 +191,7 @@ function Introduce() {
       {loadingPopup && (
         <div className='popup'>
           <div className='popup-content'>
+            <h3 className='intro'>잠시만 기다려주세요..</h3>
             <Loading/>
           </div>
         </div>
