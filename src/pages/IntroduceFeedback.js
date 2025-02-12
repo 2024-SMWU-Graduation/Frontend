@@ -3,6 +3,7 @@ import { api } from "../axios"
 import React, { useRef, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import parseFeedback from '../utils/ParseFeedback';
+import Loading from '../components/Loading';
 
 function Feedback() {
     const location = useLocation();
@@ -170,7 +171,10 @@ function Feedback() {
                       {parseFeedback(analyzeData.feedback)}
                     </div>
                   ) : (
-                    <p>데이터를 불러오는 중입니다...</p>
+                    <div>
+                      <p>데이터를 불러오는 중입니다...</p>
+                      <Loading/>
+                    </div>
                   )}
                 </>
               )}
