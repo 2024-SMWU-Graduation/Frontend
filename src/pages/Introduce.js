@@ -12,9 +12,8 @@ function Introduce() {
   const [mediaBlobUrl, setMediaBlobUrl] = useState(null); //영상 URL 상태
   const [isRecording, setIsRecording] = useState(false); //녹화 상태
   const [timeLeft, setTimeLeft] = useState(60); //타이머
-  const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
-  const [loading, setLoading] = useState(false); // 로딩 팝업
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 분석요청 팝업 상태
+  const [loadingPopup, setLoadingPopup] = useState(false); // 로딩 팝업 상태
   
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -106,9 +105,6 @@ function Introduce() {
       return alert("녹화된 영상이 없습니다.");
     }
     
-    // 페이지 로딩 팝업 띄우기
-    setLoading(true);
-
     try {
       const formData = new FormData();
       formData.append("file", videoBlob, "recorded-video.mp4");
@@ -136,8 +132,6 @@ function Introduce() {
       await api.post("/feedback/introduce", modifiedData, {
         headers: { "Content-Type": "application/json" }})
 
-        setLoading(false);
-
       // 녹화 완료 페이지 이동
       navigate('/interview-end');
     } catch (error) {
@@ -157,10 +151,6 @@ function Introduce() {
           <br/>
           {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
-
-        <div>
-          {loading ? <Loading /> : null}
-        </div>
 
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
@@ -185,14 +175,23 @@ function Introduce() {
           <br />
         </div>
       </div>
-    
+      {/* 분석요청팝업 */}
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
-            <h3 className='intro'>녹화가 완료되었습니다. 분석을 요청하시겠습니까?</h3>
+            <h3 className='intro'>녹화가 완료되었습니다. <br/> 분석을 요청하시겠습니까?</h3>
             <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
-            <button className="submit-button" onClick={handleSubmit}>분석 요청</button>
+            <button className="submit-button" // 분석 요청 버튼 클릭시 1.분석함수 2.요청팝업닫기 3.로딩팝업띄우기
+            onClick={() => { handleSubmit(); setIsPopupOpen(false); setLoadingPopup(true);}}>분석 요청</button>
             <button className="submit-button" onClick={() => setIsPopupOpen(false)}>취소</button>
+          </div>
+        </div>
+      )}
+      {/* 로딩팝업 */}
+      {loadingPopup && (
+        <div className='popup'>
+          <div className='popup-content'>
+            <Loading/>
           </div>
         </div>
       )}
