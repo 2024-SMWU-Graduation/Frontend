@@ -11,6 +11,7 @@ function Feedback() {
     const [apiResult, setApiResult] = useState(null);
     const [analyzeData, setAnalyzeData] = useState(null);
     const [activeTab, setActiveTab] = useState(0);
+    const [fetching, setFetching] = useState(true);  // 백엔드 요청 여부 추적 상태
 
     // 백에서 영상 url, 표정분석 결과 url 받기
     useEffect(() => {
@@ -18,7 +19,6 @@ function Feedback() {
         try {
           const response = await api.get(`/feedback/introduce/${id}`);
           console.log("API 응답:", response); // 전체 응답 확인
-          console.log("응답 데이터:", response.data); // 실제 데이터 확인
     
           if (response.data && response.data.data) {
             const feedback = {
@@ -28,8 +28,15 @@ function Feedback() {
               analyzeLink: response.data.data.analyzeLink,
             };
             console.log("🎯 설정된 feedback:", feedback);
-            setApiResult(feedback);
-            console.log("🔥 setApiResult 호출됨!");
+
+            // 백엔드에서 analyzeLink가 바뀌었으면 상태 업데이트
+            if (feedback.analyzeLink !== apiResult?.analyzeLink) {
+              setApiResult(feedback);
+            }
+            // analyzeLink가 null이 아니면 요청을 멈추도록 설정
+            if (feedback.analyzeLink) {
+              setFetching(false);  // analyzeLink가 올바르게 설정되면 요청 중지
+            }
           } else {
             console.error("API 응답이 예상한 형식이 아닙니다:", response.data);
           }
@@ -37,14 +44,27 @@ function Feedback() {
           console.error("데이터를 가져오는 중 오류 발생:", error);
         }
       };
-      fetchFeedback();
-    }, [id]);
+      if (fetching) {
+        fetchFeedback();
+      }
+      // 5초마다 백엔드에 요청을 보내 analyzeLink가 변경되었는지 체크 (polling)
+      const interval = setInterval(() => {
+        if (fetching) {
+          fetchFeedback();
+        }
+      }, 5000);
+
+      // 컴포넌트가 unmount될 때 interval을 정리
+      return () => clearInterval(interval);
+    }, [id, apiResult?.analyzeLink]);
+
 
     // json 파일 데이터 저장하기
     useEffect(() => {
-      if (apiResult === null) return; // apiResult가 설정되지 않았다면 실행하지 않음
+      // if (apiResult === null) return; // apiResult가 설정되지 않았다면 실행하지 않음
+      if (!apiResult || !apiResult.analyzeLink) return; // 🔥 apiResult가 완전히 설정된 후 실행
+      console.log("🔥 useEffect 실행 - analyzeLink:", apiResult.analyzeLink);
 
-      console.log("🔥 apiResult 업데이트 확인:", apiResult);
       const fetchAnalyzeData = async () => {
         try {
           const response = await fetch(apiResult.analyzeLink);
@@ -57,14 +77,9 @@ function Feedback() {
           console.error("❌ AI 분석 데이터를 불러오는 중 오류 발생:", error);
         }
       };
-    
       fetchAnalyzeData();
     }, [apiResult?.analyzeLink]);
-
-    // 피드백 json 렌더링
-    const renderAnalyzeResults = (analyzeData) => {
-      if (!analyzeData) return <p>AI 분석 결과가 없습니다.</p>;
-    };
+    
 
     // 부정-긍정 판단
     const analyzePercentage = (percentage) => {
@@ -148,9 +163,9 @@ function Feedback() {
               {activeTab === 1 && (
                 <>
                   <p className="mainFeedbackText">[AI 답변 분석 피드백 확인하기]</p>
-                  <div className="feedback-script-title">✏️ 원본 대본</div>
                   {analyzeData?.original_script ? (
                     <div>
+                      <div className="feedback-script-title">✏️ 원본 대본</div>
                       <p>{analyzeData.original_script}</p>
                       {parseFeedback(analyzeData.feedback)}
                     </div>
@@ -160,26 +175,6 @@ function Feedback() {
                 </>
               )}
             </div>
-            {/* <p className="mainFeedbackText">[부정 표정 확인하기]</p>
-            <p>{analyzePercentage(apiResult.negativePercentage)}</p>
-            <p>부정 퍼센트: {apiResult.negativePercentage}%</p>
-            {apiResult.timelines.length > 0 ? (
-              <ul>{renderTimelines(apiResult.timelines)}</ul>
-            ) : (
-              <p>시간대 정보 없음</p>
-            )}
-            <p className='mainFeedbackText'>[AI 답변 분석 피드백 확인하기]</p>
-            <div className='feedback-script-title'>✏️ 원본 대본</div>
-            <p>
-              {analyzeData?.original_script ? (
-                <div>
-                  <p>{analyzeData.original_script}</p>
-                  {parseFeedback(analyzeData.feedback)}
-                </div>
-                ) : (
-                  <p>데이터를 불러오는 중입니다...</p>
-              )}
-            </p> */}
           </div>
         </div>
       ) : (
