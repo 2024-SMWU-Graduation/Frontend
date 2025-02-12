@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
 import {formatPercentage} from "../utils/FormatUtils";
+import Loading from '../components/Loading';
 
 import QuestionData from "../assets/data/QuestionData.js";
 import CategoryData from "../assets/data/CategoryData.js";
@@ -13,8 +14,8 @@ function Question() {
   const [videoBlob, setVideoBlob] = useState(null); //녹화된 영상 Blob 상태
   const [mediaBlobUrl, setMediaBlobUrl] = useState(null); //영상 URL 상태
   const [isRecording, setIsRecording] = useState(false); //녹화 상태
-  const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 분석요청 팝업 상태
+  const [loadingPopup, setLoadingPopup] = useState(false); // 로딩 팝업 상태
 
   const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 버튼 상태
   const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
@@ -220,14 +221,24 @@ function Question() {
           <br />
         </div>
       </div>
-
+      {/* 분석요청팝업 */}
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
             <h3 className='intro'>녹화가 완료되었습니다. <br/> 분석을 요청하시겠습니까?</h3>
             <video src={mediaBlobUrl} controls style={{ width: "100%" }}></video>
-            <button className="submit-button" onClick={handleSubmit}>분석 요청</button>
+            <button className="submit-button"  // 분석 요청 버튼 클릭시 1.분석함수 2.요청팝업닫기 3.로딩팝업띄우기
+            onClick={() => { handleSubmit(); setIsPopupOpen(false); setLoadingPopup(true);}}>분석 요청</button>
             <button className="submit-button" onClick={() => setIsPopupOpen(false)}>취소</button>
+          </div>
+        </div>
+      )}
+      {/* 로딩팝업 */}
+      {loadingPopup && (
+        <div className='popup'>
+          <div className='popup-content'>
+            <h3 className='intro'>잠시만 기다려주세요..</h3>
+            <Loading/>
           </div>
         </div>
       )}

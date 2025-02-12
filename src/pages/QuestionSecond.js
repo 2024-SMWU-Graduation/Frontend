@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
 import {formatPercentage} from "../utils/FormatUtils";
+import Loading from '../components/Loading';
 
 function QuestionSecond() {
   const navigate = useNavigate();
@@ -154,7 +155,15 @@ function QuestionSecond() {
     <div>
       <div className='question-wrapper'>
         <h2 className='intro'>
-          {tailQuestion ? tailQuestion : "추가질문 생성중"}
+          {tailQuestion ? (
+            tailQuestion
+          ) : (
+            <div className='intro'>
+              <p>추가질문 생성중..</p>
+              <Loading/>
+            </div>
+          )}
+          {/* {tailQuestion ? tailQuestion : "추가질문 생성중"} */}
           <br/>
         </h2>
 
