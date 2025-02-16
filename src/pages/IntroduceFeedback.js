@@ -26,17 +26,17 @@ function Feedback() {
               videoUrl: response.data.data.videoUrl,
               negativePercentage: response.data.data.negativePercentage,
               timelines: response.data.data.timelines || [],
-              analyzeLink: response.data.data.analyzeLink,
+              analyzeUrl: response.data.data.analyzeUrl,
             };
             console.log("🎯 설정된 feedback:", feedback);
 
-            // 백엔드에서 analyzeLink가 바뀌었으면 상태 업데이트
-            if (feedback.analyzeLink !== apiResult?.analyzeLink) {
+            // 백엔드에서 analyzeUrl가 바뀌었으면 상태 업데이트
+            if (feedback.analyzeUrl !== apiResult?.analyzeUrl) {
               setApiResult(feedback);
             }
-            // analyzeLink가 null이 아니면 요청을 멈추도록 설정
-            if (feedback.analyzeLink) {
-              setFetching(false);  // analyzeLink가 올바르게 설정되면 요청 중지
+            // analyzeUrl가 null이 아니면 요청을 멈추도록 설정
+            if (feedback.analyzeUrl) {
+              setFetching(false);  // analyzeUrl가 올바르게 설정되면 요청 중지
             }
           } else {
             console.error("API 응답이 예상한 형식이 아닙니다:", response.data);
@@ -48,7 +48,7 @@ function Feedback() {
       if (fetching) {
         fetchFeedback();
       }
-      // 5초마다 백엔드에 요청을 보내 analyzeLink가 변경되었는지 체크 (polling)
+      // 5초마다 백엔드에 요청을 보내 analyzeUrl가 변경되었는지 체크 (polling)
       const interval = setInterval(() => {
         if (fetching) {
           fetchFeedback();
@@ -57,18 +57,18 @@ function Feedback() {
 
       // 컴포넌트가 unmount될 때 interval을 정리
       return () => clearInterval(interval);
-    }, [id, apiResult?.analyzeLink]);
+    }, [id, apiResult?.analyzeUrl]);
 
 
     // json 파일 데이터 저장하기
     useEffect(() => {
       // if (apiResult === null) return; // apiResult가 설정되지 않았다면 실행하지 않음
-      if (!apiResult || !apiResult.analyzeLink) return; // 🔥 apiResult가 완전히 설정된 후 실행
-      console.log("🔥 useEffect 실행 - analyzeLink:", apiResult.analyzeLink);
+      if (!apiResult || !apiResult.analyzeUrl) return; // 🔥 apiResult가 완전히 설정된 후 실행
+      console.log("🔥 useEffect 실행 - analyzeUrl:", apiResult.analyzeUrl);
 
       const fetchAnalyzeData = async () => {
         try {
-          const response = await fetch(apiResult.analyzeLink);
+          const response = await fetch(apiResult.analyzeUrl);
           if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     
           const jsonData = await response.json();
@@ -79,7 +79,7 @@ function Feedback() {
         }
       };
       fetchAnalyzeData();
-    }, [apiResult?.analyzeLink]);
+    }, [apiResult?.analyzeUrl]);
     
 
     // 부정-긍정 판단
