@@ -168,7 +168,8 @@ function Feedback() {
                     <div>
                       <div className="feedback-script-title">✏️ 원본 대본</div>
                       <p>{analyzeData.original_script}</p>
-                      {parseFeedback(analyzeData.feedback)}
+                      {/* <p>{analyzeData.improved_answer}</p> */}
+                      {parseFeedback(analyzeData)}
                     </div>
                   ) : (
                     <div>

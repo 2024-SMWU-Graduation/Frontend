@@ -3,9 +3,9 @@ import './ParseFeedback.css'
 const parseFeedback = (feedbackText) => {
   if (!feedbackText) return null;
 
-  const GoodPoint = feedbackText.match(/1\. 잘한 점:\s*(.*?)(?=\n2\. 보완할 점:|\Z)/s);
-  const BadPoint = feedbackText.match(/2\. 보완할 점:\s*(.*?)(?=\n3\. 보완된 대본 예시:|\Z)/s);
-  const improvedScript = feedbackText.match(/3\. 보완된 대본 예시:\s*(.*)/s);
+  const GoodPoint = feedbackText.positive_feedback;
+  const BadPoint = feedbackText.constructive_feedback;
+  const improvedScript = feedbackText.improved_answer;
 
   const extractList = (text) => {
     return text
@@ -18,13 +18,15 @@ const parseFeedback = (feedbackText) => {
   };
 
   return (
-    <div className="parsing-feedback">
+    <div>
       {GoodPoint && (
         <div>
           <div className='feedback-script-title'>
             😄 잘한 점
           </div>
-          <ul>{extractList(GoodPoint[1])}</ul>
+          {/* <ul>{extractList(GoodPoint[1])}</ul> */}
+          <ul>{GoodPoint}</ul>
+          <br/>
         </div>
       )}
 
@@ -33,7 +35,9 @@ const parseFeedback = (feedbackText) => {
           <div className='feedback-script-title'>
             🤔 보완할 점
           </div>
-          <ul>{extractList(BadPoint[1])}</ul>
+          {/* <ul>{extractList(BadPoint[1])}</ul> */}
+          <ul>{BadPoint}</ul>
+          <br/>
         </div>
       )}
 
@@ -42,7 +46,8 @@ const parseFeedback = (feedbackText) => {
           <div className='feedback-script-title'>
             📄 보완된 대본 예시
           </div>
-          <blockquote>{improvedScript[1]}</blockquote>
+          {/* <blockquote>{improvedScript[1]}</blockquote> */}
+          <ul>{improvedScript}</ul>
         </div>
       )}
     </div>
