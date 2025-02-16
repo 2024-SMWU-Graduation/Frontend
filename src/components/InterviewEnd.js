@@ -1,4 +1,4 @@
-import '../css/InterviewEnd.css';
+import './InterviewEnd.css';
 
 function InterviewEnd() {
 

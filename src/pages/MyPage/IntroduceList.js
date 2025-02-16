@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { api } from "../axios"
+import { api } from "../../axios"
 import '../css/IntroduceList.css';
-import { formatDate } from "../utils/DateUtils";
+import { formatDate } from "../../utils/DateUtils";
 import { useNavigate } from 'react-router-dom';
 
 const VideoGrid = () => {

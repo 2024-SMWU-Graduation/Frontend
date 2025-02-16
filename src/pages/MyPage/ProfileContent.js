@@ -1,7 +1,7 @@
 import '../css/ProfileContent.css';
-import { api } from "../axios"
+import { api } from "../../axios"
 import {useEffect, useState} from "react";
-import { formatDate } from "../utils/DateUtils";
+import { formatDate } from "../../utils/DateUtils";
 import kakaoLogo from "../assets/images/kakaoLogo.png"
 import naverLogo from "../assets/images/naverLogo.png"
 import noonsong from "../assets/images/noonsong.jpg"
