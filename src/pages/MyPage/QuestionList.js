@@ -13,8 +13,9 @@ function QuestionList() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-          const response = await api.get('/interview/random?');
-          // setVideos(response.data.data.responseDtoList);
+          const response = await api.get('/interview/random');
+          console.log("response 결과", response);
+          setVideos(response.data.data.responseDtoList);
       } catch (error) {
           console.error('비디오를 가져오는 중 오류 발생:', error);
       }
