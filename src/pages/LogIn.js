@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
 import '../css/LogIn.css';
 import {useAuth} from "../AuthContext";
-import {login} from "../authActions";
+import {login} from "../authorize/authActions";
 
 //import { useForm,Controller } from "react-hook-form";
 

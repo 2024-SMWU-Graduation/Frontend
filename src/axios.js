@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {logout} from "./authActions";
+import {logout} from "./authorize/authActions";
 
 export const api = axios.create({
     baseURL: 'http://54.180.100.5:8080/api',

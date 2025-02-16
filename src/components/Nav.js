@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {useAuth} from "../AuthContext";
-import {logout} from "../authActions";
+import {logout} from "../authorize/authActions";
 
 function NavigateBar() {
   const { state, dispatch } = useAuth();

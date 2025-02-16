@@ -5,11 +5,11 @@ import NavigateBar from './components/Nav';
 import Footer from './components/Footer';
 
 import HomePage from './pages/HomePage';
-import MyPage from './pages/MyPage';
+import MyPage from './pages/MyPage/MyPage';
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
 import Introduce from './pages/Introduce';
-import InterviewEnd from './pages/InterviewEnd';
+import InterviewEnd from './components/InterviewEnd';
 import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
 import QuestionSecond from './pages/QuestionSecond';
@@ -17,8 +17,8 @@ import QuestionFeedback from './pages/QuestionFeedback';
 
 import {useEffect} from "react";
 import {setAxiosInterceptors} from "./axios";
-import {logout} from "./authActions";
-import AuthSuccess from "./pages/AuthSuccess";
+import {logout} from "./authorize/authActions";
+import AuthSuccess from "./authorize/AuthSuccess";
 
 function Main() {
   return (

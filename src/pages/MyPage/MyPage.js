@@ -1,4 +1,4 @@
-import '../css/MyPage.css';
+import '../../css/MyPage.css';
 import {useEffect, useState} from "react";
 import VideoGrid from "./IntroduceList";
 import ProfileContent from "./ProfileContent";
