@@ -2,6 +2,7 @@ import '../css/MyPage.css';
 import {useEffect, useState} from "react";
 import VideoGrid from "./IntroduceList";
 import ProfileContent from "./ProfileContent";
+import QuestionList from './QuestionList';
 
 const MyPage = () => {
     const [selectedMenu, setSelectedMenu] = useState(() => {
@@ -48,10 +49,11 @@ const Sidebar = ({selectedMenu, onMenuSelect}) => {
 const Content = ({ selectedMenu }) => {
     switch (selectedMenu) {
         case 'profile':
-            return <ProfileContent />;
+          return <ProfileContent />;
         case 'introduce-feedback':
-            return <VideoGrid />;
-        // 추가 컨텐츠 컴포넌트들...
+          return <VideoGrid />;
+        case 'job-feedback' :
+          return <QuestionList />;
         default:
             return <div>선택된 메뉴가 없습니다.</div>;
     }
