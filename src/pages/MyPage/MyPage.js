@@ -1,6 +1,6 @@
 import '../../css/MyPage.css';
 import {useEffect, useState} from "react";
-import VideoGrid from "./IntroduceList";
+import IntroduceList from "./IntroduceList";
 import ProfileContent from "./ProfileContent";
 import QuestionList from './QuestionList';
 
@@ -51,7 +51,7 @@ const Content = ({ selectedMenu }) => {
         case 'profile':
           return <ProfileContent />;
         case 'introduce-feedback':
-          return <VideoGrid />;
+          return <IntroduceList />;
         case 'job-feedback' :
           return <QuestionList />;
         default:

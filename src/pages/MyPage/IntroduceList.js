@@ -4,31 +4,34 @@ import '../../css/IntroduceList.css';
 import { formatDate } from "../../utils/DateUtils";
 import { useNavigate } from 'react-router-dom';
 
-const VideoGrid = () => {
+const IntroduceList = () => {
     const [videos, setVideos] = useState([]);
     const [editingId, setEditingId] = useState(null); 
     const [newTitle, setNewTitle] = useState(""); 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchVideos = async () => {
-            try {
-                const response = await api.get('/interview/introduce');
-                setVideos(response.data.data.responseDtoList);
-            } catch (error) {
-                console.error('비디오를 가져오는 중 오류 발생:', error);
-            }
-        };
+      const fetchVideos = async () => {
+        try {
+            const response = await api.get('/interview/introduce');
+            console.log("response 결과", response);
+            setVideos(response.data.data.responseDtoList);
+            console.log("video에 넣은 결과", videos);
+        } catch (error) {
+            console.error('비디오를 가져오는 중 오류 발생:', error);
+        }
+      };
 
-        fetchVideos();
+      fetchVideos();
     }, []);
 
+    // 동영상 제목 수정
     const handleEditClick = (id, currentTitle) => {
       setEditingId(id);
       setNewTitle(currentTitle); // 현재 제목으로 초기화
     };
 
-    // 동영상 이름 바꿔서 백으로 보내기
+    // 동영상 제목 수정 후 백으로 보내서 저장
     const handleSaveClick = async (id) => {
       try {
           // API를 호출하여 제목 업데이트
@@ -58,7 +61,7 @@ const VideoGrid = () => {
       } catch (error) {
           console.error("비디오 삭제 중 오류 발생:", error);
       }
-  };
+    };
 
     // 피드백 페이지로 이동
     const handleTitleClick = (id) => {
@@ -117,4 +120,4 @@ const VideoGrid = () => {
     );
 };
 
-export default VideoGrid;
+export default IntroduceList;
