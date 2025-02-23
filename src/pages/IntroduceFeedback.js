@@ -126,7 +126,9 @@ function Feedback() {
 
       if (videoRef.current) {
         videoRef.current.pause();
-        videoRef.current.currentTime = parseFloat(time); //동영샹 재생 시간 설정 (숫자로 변환)
+
+         // 0.5초 추가하여 재생 위치 설정
+        videoRef.current.currentTime = parseFloat(time) +0.5;
         
         const onSeeked = () => {
           videoRef.current.play();
