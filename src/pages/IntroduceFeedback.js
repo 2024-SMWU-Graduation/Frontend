@@ -94,10 +94,11 @@ function Feedback() {
     // 타임라인 렌더링
     const renderTimelines = (timelines) => {
       return timelines.map((timeline, index) => {
-        const [start, end] = timeline.split(' - ').map((time) => {
-          const [minutes, seconds] = time.split(':').map(Number);
-          return minutes * 60 + seconds;
-        });
+        const { startTime, endTime, intensity } = timeline;
+
+        // 시작 시간 초단위 변환
+        const [startMinutes, startSeconds] = startTime.split(":").map(Number);
+        const start = startMinutes * 60 + startSeconds;
 
         return (
           <li key={index}>
@@ -108,12 +109,13 @@ function Feedback() {
                 handleTimestampClick(start);
               }}
             >
-              {timeline}
+              {startTime} - {endTime} ({intensity})
             </a>
           </li>
         );
       });
     };
+
 
     // 타임스탬프 클릭
     const handleTimestampClick = (time) => {

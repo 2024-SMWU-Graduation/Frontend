@@ -118,19 +118,30 @@ function Introduce() {
 
       const interviewId = s3Response.data.data.interviewId;
 
-      // AI 분석 API 호출
-      const aiResponse = await axios.post("http://localhost:8081/upload", formData, {
-        headers: { "Content-type": "multipart/form-data", },
-      });
-
+      // AI 분석 API 호출 (새로운 FormData 객체 사용)
+      const aiFormData = new FormData();
+      aiFormData.append("file", videoBlob, "recorded-video.mp4");
+    
+      const aiResponse = await axios.post("http://localhost:8081/upload", aiFormData);
+    
+      // AI 분석 결과 처리
+      const aiResult = aiResponse.data.result;
+    
+      // 반환된 데이터를 기반으로 수정된 데이터 구조 생성
       const modifiedData = {
         interviewId: interviewId,
-        percentage: formatPercentage(aiResponse.data.result[0]),
-        timelines: aiResponse.data.result[1]
-      }
-
+        negativePercentage: aiResult.negative_ratio, // 부정 비율 (예: 23.5)
+        timelines: aiResult.negative_intervals.map(interval => ({
+          startTime: interval.start,
+          endTime: interval.end,
+          intensity: interval.intensity,
+        })), // 구간별 상세 정보
+      };
+    
+      // 피드백 API 호출
       await api.post("/feedback/introduce", modifiedData, {
-        headers: { "Content-Type": "application/json" }})
+        headers: { "Content-Type": "application/json" },
+      });
 
       // 녹화 완료 페이지 이동
       navigate('/interview-end');
