@@ -112,37 +112,46 @@ function QuestionSecond() {
     };
 
     try {
-      const videoFormData = new FormData();
-      videoFormData.append("file", videoBlob, "recorded-video.mp4");
-
-      // AI 분석 API 호출
-      const aiResponse = await axios.post("http://localhost:8081/upload", videoFormData, {
-        headers: { "Content-type": "multipart/form-data", },
-      });
-
+      // 백-S3 보낼 데이터
       const formData = new FormData();
       formData.append("file", videoBlob, "recorded-video.mp4");
-
-      // // JSON 데이터를 문자열로 변환해서 추가
-      // const jsonData = JSON.stringify({
-      //   interviewId: randomInterviewId,
-      //   questionData: selectedText, 
-      // });
-      // formData.append("requestDto", new Blob([jsonData], { type: "application/json" }));
-
+      
+      // JSON 데이터를 문자열로 변환해서 추가
+      const jsonData = JSON.stringify({
+        interviewId: randomInterviewId,
+        // questionData: selectedText, 
+      });
+      formData.append("requestDto", new Blob([jsonData], { type: "application/json" }));
+      
       // S3 업로드 API 호출
       const s3Response = await api.post(`/interview/random/question/${secondRandomQuestionId}`, formData, {
         headers: {
           "Content-type": "multipart/form-data",
         },
       });
+      
+      
+      // AI 보낼 데이터
+      const videoFormData = new FormData();
+      videoFormData.append("file", videoBlob, "recorded-video.mp4");
+
+      // AI 분석 API 호출
+      const aiResponse = await axios.post("http://localhost:8081/upload", videoFormData,);
+
+      // AI 분석 결과 처리
+      const aiResult = aiResponse.data.result;
 
       const modifiedData = {
         questionId: secondRandomQuestionId,
-        percentage: formatPercentage(aiResponse.data.result[0]),
-        timelines: aiResponse.data.result[1]
+        negativePercentage: aiResult.negative_ratio, // 부정 비율 (예: 23.5)
+        timelines: aiResult.negative_intervals.map(interval => ({
+          startTime: interval.start,
+          endTime: interval.end,
+          intensity: interval.intensity,
+        })), // 구간별 상세 정보
       };
 
+      // 피드백 API
       await api.post("/feedback/random/question", modifiedData, {
         headers: { "Content-Type": "application/json" }
       });
