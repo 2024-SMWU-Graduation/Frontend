@@ -2,17 +2,23 @@ import '../css/QuestionFeedback.css'
 import { api } from "../axios"
 import React, { useRef, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import parseFeedback from '../utils/ParseFeedback';
+import parseQuestionFeedback from '../utils/ParseQuestionFeedback';
 import Loading from '../components/Loading';
 
 function QuestionFeedback() {
   const location = useLocation();
   const id = location.state.id;
   const videoRef = useRef(null); //video 태그 제어
-  const [apiResult, setApiResult] = useState(null);
   const [analyzeData, setAnalyzeData] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [fetching, setFetching] = useState(true);  // 백엔드 요청 여부 추적 상태
+
+  // 첫번째 영상
+  const [videoFirst, setVideoFirst] = useState(null);
+  const [FirstAnalyzeUrl, setFirstAnalyzeUrl] = useState(null);
+  const [FirstVideoUrl, setFirstVideoUrl] = useState(null);
+  const [FirstNegativePercentage, setFirstNegativePercentage] = useState(null);
+  const [FirstTimelines, setFirstTimelines] = useState([]);
 
   // 백에서 영상 url, 표정분석 결과 url 받기
   useEffect(() => {
@@ -22,20 +28,18 @@ function QuestionFeedback() {
         console.log("API 응답:", response); // 전체 응답 확인
   
         if (response.data && response.data.data) {
-          const feedback = {
-            videoUrl: response.data.data.videoUrl,
-            negativePercentage: response.data.data.negativePercentage,
-            timelines: response.data.data.timelines || [],
-            analyzeUrl: response.data.data.analyzeUrl,
-          };
-          console.log("🎯 설정된 feedback:", feedback);
+          const feedbackList = response.data.data.feedbackList;
+          const firstFeedback = feedbackList[0];  // 첫 번째 피드백
 
-          // 백엔드에서 analyzeUrl가 바뀌었으면 상태 업데이트
-          if (feedback.analyzeUrl !== apiResult?.analyzeUrl) {
-            setApiResult(feedback);
-          }
+          // 첫번째 피드백 
+          setVideoFirst(firstFeedback);
+          setFirstAnalyzeUrl(firstFeedback.analyzeUrl);
+          setFirstVideoUrl(firstFeedback.videoUrl);
+          setFirstNegativePercentage(firstFeedback.negativePercentage);
+          setFirstTimelines(firstFeedback.timelines || []);
+
           // analyzeUrl가 null이 아니면 요청을 멈추도록 설정
-          if (feedback.analyzeUrl) {
+          if (FirstAnalyzeUrl) {
             setFetching(false);  // analyzeUrl가 올바르게 설정되면 요청 중지
           }
         } else {
@@ -49,25 +53,24 @@ function QuestionFeedback() {
       fetchFeedback();
     }
     // 5초마다 백엔드에 요청을 보내 analyzeUrl가 변경되었는지 체크 (polling)
-    // const interval = setInterval(() => {
-    //   if (fetching) {
-    //     fetchFeedback();
-    //   }
-    // }, 5000);
+    const interval = setInterval(() => {
+      if (fetching) {
+        fetchFeedback();
+      }
+    }, 5000);
 
-    // // 컴포넌트가 unmount될 때 interval을 정리
-    // return () => clearInterval(interval);
-  }, [id, apiResult?.analyzeUrl]);
+    // 컴포넌트가 unmount될 때 interval을 정리
+    return () => clearInterval(interval);
+  }, [id, videoFirst]);
 
   // json 파일 데이터 저장하기
   useEffect(() => {
-    // if (apiResult === null) return; // apiResult가 설정되지 않았다면 실행하지 않음
-    if (!apiResult || !apiResult.analyzeUrl) return; // 🔥 apiResult가 완전히 설정된 후 실행
-    console.log("🔥 useEffect 실행 - analyzeUrl:", apiResult.analyzeUrl);
+    // if (!apiResult || !apiResult.analyzeUrl) return; // 🔥 apiResult가 완전히 설정된 후 실행
+    // console.log("🔥 useEffect 실행 - analyzeUrl:", apiResult.analyzeUrl);
 
     const fetchAnalyzeData = async () => {
       try {
-        const response = await fetch(apiResult.analyzeUrl);
+        const response = await fetch(FirstAnalyzeUrl);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
   
         const jsonData = await response.json();
@@ -78,7 +81,7 @@ function QuestionFeedback() {
       }
     };
     fetchAnalyzeData();
-  }, [apiResult?.analyzeUrl]);
+  }, [FirstAnalyzeUrl]);
   
 
   // 부정-긍정 판단
@@ -138,10 +141,10 @@ function QuestionFeedback() {
 
   return (
     <div>
-    {apiResult ? (
+    {videoFirst ? (
       <div className="content">
         <div className="videoArea">
-          <video ref={videoRef} src={apiResult.videoUrl} controls preload="auto"></video>
+          <video ref={videoRef} src={FirstVideoUrl} controls preload="auto"></video>
         </div>
         <div className="feedbackArea">
           <div className='tabs'>
@@ -153,10 +156,10 @@ function QuestionFeedback() {
             {activeTab === 0 && (
               <>
                 <p className="mainFeedbackText">[부정 표정 확인하기]</p>
-                <p>{analyzePercentage(apiResult.negativePercentage)}</p>
-                <p>부정 퍼센트: {apiResult.negativePercentage}%</p>
-                {apiResult.timelines.length > 0 ? (
-                  <ul>{renderTimelines(apiResult.timelines)}</ul>
+                <p>{analyzePercentage(FirstNegativePercentage)}</p>
+                <p>부정 퍼센트: {FirstNegativePercentage}%</p>
+                {FirstTimelines.length > 0 ? (
+                  <ul>{renderTimelines(FirstTimelines)}</ul>
                 ) : (
                   <p>시간대 정보 없음</p>
                 )}
@@ -165,12 +168,13 @@ function QuestionFeedback() {
             {activeTab === 1 && (
               <>
                 <p className="mainFeedbackText">[AI 답변 분석 피드백 확인하기]</p>
-                {analyzeData?.original_script ? (
+                {analyzeData?.answer ? (
                   <div>
-                    <div className="feedback-script-title">✏️ 원본 대본</div>
-                    <p>{analyzeData.original_script}</p>
-                    {/* <p>{analyzeData.improved_answer}</p> */}
-                    {parseFeedback(analyzeData)}
+                    <div className="feedback-script-title">✏️ 질문</div>
+                    <p>{analyzeData.question}</p>
+                    <div className="feedback-script-title">✏️ 답변</div>
+                    <p>{analyzeData.answer}</p>
+                    {parseQuestionFeedback(analyzeData)}
                   </div>
                 ) : (
                   <div>
