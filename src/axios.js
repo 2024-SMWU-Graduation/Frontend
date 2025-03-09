@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {logout} from "./authorize/authActions";
+// import {logout} from "./authorize/authActions";
 
 export const api = axios.create({
-    baseURL: 'http://54.180.100.5:8080/api',
+    baseURL: 'http://3.37.141.179:8080/api',
     headers: {
         'Content-Type': 'application/json'
     }
@@ -32,7 +32,7 @@ const setAxiosInterceptors = () => {
                 const accessToken = localStorage.getItem('accessToken');
                 const refreshToken = localStorage.getItem('refreshToken');
                 try {
-                    const response = await axios.post('http://54.180.100.5:8080/api/auth/reissue', {}, {
+                    const response = await axios.post('http://3.37.141.179:8080/api/auth/reissue', {}, {
                         headers: {
                             'Authorization': accessToken,
                             'Refreshtoken': refreshToken
