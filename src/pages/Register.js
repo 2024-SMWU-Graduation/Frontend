@@ -13,7 +13,7 @@ function Resister () {
   const sendVerificationCode = async() => {
     try {
         console.log(email)
-        const response = await axios.post("http://54.180.100.5:8080/api/mail", { email });
+        const response = await axios.post("http://3.37.141.179:8080/api/mail", { email });
         console.log('인증 코드 전송 성공 ');
     } catch (error) {
       console.log('인증 코드 전송 실패 ');
@@ -22,7 +22,7 @@ function Resister () {
 
   const checkVerificationCode = async() => {
     try {
-      const response = await axios.post("http://54.180.100.5:8080/api/mail/verification-code", 
+      const response = await axios.post("http://3.37.141.179:8080/api/mail/verification-code", 
       { email, verificationCode });
       console.log('이메일 인증 성공');
     } catch (error) {
@@ -32,7 +32,7 @@ function Resister () {
 
   const signUp = async() => {
     try {
-      const response = await axios.post("http://54.180.100.5:8080/api/users/signup", { email, password, name, userRole: "USER" });
+      const response = await axios.post("http://3.37.141.179:8080/api/users/signup", { email, password, name, userRole: "USER" });
       console.log('회원가입 성공');
     } catch (error) {
       console.log('회원가입 실패');
