@@ -1,8 +1,7 @@
-import {AuthProvider, useAuth} from "./AuthContext";
+import {AuthProvider} from "./AuthContext";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './Main.css'
 import NavigateBar from './components/Nav';
-import Footer from './components/Footer';
 
 import HomePage from './pages/HomePage';
 import MyPage from './pages/MyPage/MyPage';
@@ -14,10 +13,11 @@ import IntroduceFeedback from './pages/IntroduceFeedback';
 import Question from './pages/Question.js';
 import QuestionSecond from './pages/QuestionSecond';
 import QuestionFeedback from './pages/QuestionFeedback';
+import QuestionFeedbackSecond from "./pages/QuestionFeedbackSecond.js";
 
-import {useEffect} from "react";
-import {setAxiosInterceptors} from "./axios";
-import {logout} from "./authorize/authActions";
+// import {useEffect} from "react";
+// import {setAxiosInterceptors} from "./axios";
+// import {logout} from "./authorize/authActions";
 import AuthSuccess from "./authorize/AuthSuccess";
 
 function Main() {
@@ -39,6 +39,7 @@ function Main() {
                 <Route path="question" element={<Question />} />
                 <Route path="question-second" element={<QuestionSecond />} />
                 <Route path="question-feedback" element={<QuestionFeedback />} />
+                <Route path="question-feedback-second" element={<QuestionFeedbackSecond />} />
               </Routes>
             </div>
           </div>

@@ -1,11 +1,12 @@
 import '../css/QuestionFeedback.css'
 import { api } from "../axios"
 import React, { useRef, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import parseQuestionFeedback from '../utils/ParseQuestionFeedback';
 import Loading from '../components/Loading';
 
 function QuestionFeedback() {
+  const navigate = useNavigate();
   const location = useLocation();
   const id = location.state.id;
   const videoRef = useRef(null); //video 태그 제어
@@ -138,58 +139,68 @@ function QuestionFeedback() {
     }
   };
 
+  // 두번째 영상 피드백 페이지로 이동
+  const goToSecondVideo = (id) => {
+    navigate(`/question-feedback-second`, {
+      state : { id },
+    });
+  };
 
   return (
     <div>
-    {videoFirst ? (
-      <div className="content">
-        <div className="videoArea">
-          <video ref={videoRef} src={FirstVideoUrl} controls preload="auto"></video>
-        </div>
-        <div className="feedbackArea">
-          <div className='tabs'>
-            <button className={activeTab === 0 ? "active" : ""} onClick={() => setActiveTab(0)}>표정 분석</button>
-            <button className={activeTab === 1 ? "active" : ""} onClick={() => setActiveTab(1)}>AI 답변 분석</button>
+      {videoFirst ? (
+        <div className="content">
+          <div className="videoArea">
+            <video ref={videoRef} src={FirstVideoUrl} controls preload="auto"></video>
           </div>
-          <h3>인터뷰 분석 완료!</h3>
-          <div className="tabContent">
-            {activeTab === 0 && (
-              <>
-                <p className="mainFeedbackText">[부정 표정 확인하기]</p>
-                <p>{analyzePercentage(FirstNegativePercentage)}</p>
-                <p>부정 퍼센트: {FirstNegativePercentage}%</p>
-                {FirstTimelines.length > 0 ? (
-                  <ul>{renderTimelines(FirstTimelines)}</ul>
-                ) : (
-                  <p>시간대 정보 없음</p>
-                )}
-              </>
-            )}
-            {activeTab === 1 && (
-              <>
-                <p className="mainFeedbackText">[AI 답변 분석 피드백 확인하기]</p>
-                {analyzeData?.answer ? (
-                  <div>
-                    <div className="feedback-script-title">✏️ 질문</div>
-                    <p>{analyzeData.question}</p>
-                    <div className="feedback-script-title">✏️ 답변</div>
-                    <p>{analyzeData.answer}</p>
-                    {parseQuestionFeedback(analyzeData)}
-                  </div>
-                ) : (
-                  <div>
-                    <p>데이터를 불러오는 중입니다...</p>
-                    <Loading/>
-                  </div>
-                )}
-              </>
-            )}
+          <div className="feedbackArea">
+            <div className='tabs'>
+              <button className={activeTab === 0 ? "active" : ""} onClick={() => setActiveTab(0)}>표정 분석</button>
+              <button className={activeTab === 1 ? "active" : ""} onClick={() => setActiveTab(1)}>AI 답변 분석</button>
+            </div>
+            <h3>인터뷰 분석 완료!</h3>
+            <div className="tabContent">
+              {activeTab === 0 && (
+                <>
+                  <p className="mainFeedbackText">[부정 표정 확인하기]</p>
+                  <p>{analyzePercentage(FirstNegativePercentage)}</p>
+                  <p>부정 퍼센트: {FirstNegativePercentage}%</p>
+                  {FirstTimelines.length > 0 ? (
+                    <ul>{renderTimelines(FirstTimelines)}</ul>
+                  ) : (
+                    <p>시간대 정보 없음</p>
+                  )}
+                </>
+              )}
+              {activeTab === 1 && (
+                <>
+                  <p className="mainFeedbackText">[AI 답변 분석 피드백 확인하기]</p>
+                  {analyzeData?.answer ? (
+                    <div>
+                      <div className="feedback-script-title">✏️ 질문</div>
+                      <p>{analyzeData.question}</p>
+                      <div className="feedback-script-title">✏️ 답변</div>
+                      <p>{analyzeData.answer}</p>
+                      {parseQuestionFeedback(analyzeData)}
+                    </div>
+                  ) : (
+                    <div>
+                      <p>데이터를 불러오는 중입니다...</p>
+                      <Loading/>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
+      ) : (
+        <p>데이터를 불러오는 중입니다...</p>
+      )}
+
+      <div className="next-video-container">
+        <button className="next-video-btn" onClick={() => goToSecondVideo(id)}>두번째 영상으로 이동 →</button>
       </div>
-    ) : (
-      <p>데이터를 불러오는 중입니다...</p>
-    )}
     </div>
   );
 };
