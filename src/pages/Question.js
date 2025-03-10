@@ -137,7 +137,7 @@ function Question() {
       videoFormData.append("file", videoBlob, "recorded-video.mp4");
 
       // AI 분석 API 호출
-      const aiResponse = await axios.post("http://15.164.120.119:5000/upload", videoFormData);
+      const aiResponse = await axios.post("https://easy-terview.site/upload", videoFormData);
 
       // AI 분석 결과 처리
       const aiResult = aiResponse.data.result;

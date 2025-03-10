@@ -122,7 +122,7 @@ function Introduce() {
       const aiFormData = new FormData();
       aiFormData.append("file", videoBlob, "recorded-video.mp4");
     
-      const aiResponse = await axios.post("http://15.164.120.119:5000/upload", aiFormData);
+      const aiResponse = await axios.post("https://easy-terview.site/upload", aiFormData);
     
       // AI 분석 결과 처리
       const aiResult = aiResponse.data.result;
