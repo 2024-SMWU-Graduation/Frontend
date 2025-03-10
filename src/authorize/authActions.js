@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export async function login(dispatch, email, password) {
     try {
-        const response = await axios.post('http://3.37.141.179:8080/api/users/login', { email, password });
+        const response = await axios.post('https://easy-terview.site/api/users/login', { email, password });
         const accessToken = response.headers['authorization'];
         const refreshToken = response.headers['refreshtoken'];
 

@@ -22,7 +22,7 @@ function LogIn() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const url = 'http://3.37.141.179:8080/api/users/login'
+      const url = 'https://easy-terview.site/api/users/login'
       await login(dispatch, email, password)
       navigate('/')
     } catch (error) {
@@ -30,8 +30,8 @@ function LogIn() {
       alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
     }
   }
-  const KAKAO_AUTH_URL = `http://3.37.141.179:8080/oauth2/authorization/kakao`;
-  const NAVER_AUTH_URL = `http://3.37.141.179:8080/oauth2/authorization/naver`;
+  const KAKAO_AUTH_URL = `https://easy-terview.site/oauth2/authorization/kakao`;
+  const NAVER_AUTH_URL = `https://easy-terview.site/oauth2/authorization/naver`;
 
   const handleKakaoLogin = () => {
   window.location.href = KAKAO_AUTH_URL;
