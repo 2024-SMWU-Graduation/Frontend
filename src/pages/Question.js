@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
-import {formatPercentage} from "../utils/FormatUtils";
+// import {formatPercentage} from "../utils/FormatUtils";
 import Loading from '../components/Loading';
 
 import QuestionData from "../assets/data/QuestionData.js";

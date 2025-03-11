@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios"; 
 import { api } from "../axios";
-import {formatPercentage} from "../utils/FormatUtils";
+// import {formatPercentage} from "../utils/FormatUtils";
 import Loading from '../components/Loading';
 
 function QuestionSecond() {
@@ -11,11 +11,11 @@ function QuestionSecond() {
   const [videoBlob, setVideoBlob] = useState(null); //녹화된 영상 Blob 상태
   const [mediaBlobUrl, setMediaBlobUrl] = useState(null); //영상 URL 상태
   const [isRecording, setIsRecording] = useState(false); //녹화 상태
-  const [isRecordingFinished, setIsRecordingFinished] = useState(false); // 녹화 종료 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 분석요청 팝업 상태
   const [loadingPopup, setLoadingPopup] = useState(false); // 로딩 팝업 상태
 
-  const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
+  // const [selectedText, setSelectedText] = useState(""); // 랜덤 질문 상태 관리
+  const [isRecordingText, setIsRecordingText] = useState("") // 녹화중 알림 텍스트 
   const [randomInterviewId, setRandomInterviewId] = useState("") // 아이디값
   const [tailQuestion, setTailQuestion] = useState("") // 추가 질문
   const [secondRandomQuestionId, setSecondRandomQuestionId] = useState("") // 두번째 영상의 퀘스천 아이디값
@@ -95,6 +95,7 @@ function QuestionSecond() {
     mediaRecorder.start();
     mediaRecorderRef.current = mediaRecorder;
     setIsRecording(true);
+    setIsRecordingText("녹화중");
   };
 
   // 녹화 중지 함수
@@ -103,6 +104,7 @@ function QuestionSecond() {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
+    setIsRecordingText("녹화 종료")
   };
 
   // 분석 요청
@@ -176,10 +178,12 @@ function QuestionSecond() {
               <Loading/>
             </div>
           )}
-          {/* {tailQuestion ? tailQuestion : "추가질문 생성중"} */}
           <br/>
         </h2>
-
+        <div className='record-warning'>
+          {isRecordingText}
+        </div>
+        <br/>
         <div style={{ position: "relative", width: "640px", height: "480px", }}>
           <video ref={videoRef} />
           <div
