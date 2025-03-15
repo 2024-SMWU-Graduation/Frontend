@@ -178,7 +178,13 @@ function QuestionSecond() {
               <Loading/>
             </div>
           )}
+        <br/>
+        <div className='question-warning-text'>
+          질문이 제시되면 3초 후 녹화가 시작됩니다. 답변을 준비해주세요.
           <br/>
+          얼굴이 화면 중앙에 올 수 있도록 조정해주세요.
+        </div>
+        <br/>
         </h2>
         <div className='record-warning'>
           {isRecordingText}
