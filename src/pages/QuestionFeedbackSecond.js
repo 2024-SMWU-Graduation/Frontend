@@ -50,9 +50,9 @@ function QuestionFeedbackSecond() {
         console.error("데이터를 가져오는 중 오류 발생:", error);
       }
     };
-    if (fetching) {
-      fetchFeedback();
-    }
+    
+    fetchFeedback();
+
     // 5초마다 백엔드에 요청을 보내 analyzeUrl가 변경되었는지 체크 (polling)
     const interval = setInterval(() => {
       if (fetching) {
@@ -62,7 +62,13 @@ function QuestionFeedbackSecond() {
 
     // // 컴포넌트가 unmount될 때 interval을 정리
     return () => clearInterval(interval);
-  }, [id, videoSecond]);
+  }, [fetching, id]);
+
+  useEffect(() => {
+      if (SecondAnalyzeUrl) {
+        setFetching(false);
+      }
+    }, [SecondAnalyzeUrl]);
 
   // json 파일 데이터 저장하기
   useEffect(() => {
