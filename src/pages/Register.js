@@ -40,7 +40,7 @@ function Resister () {
   }
 
   return (
-    <div>
+    <div className="register-container">
       <div className = "page">
         <div className = "titleWrap">
             회원가입
