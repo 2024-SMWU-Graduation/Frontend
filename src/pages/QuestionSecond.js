@@ -199,10 +199,10 @@ function QuestionSecond() {
 
         <div className='video'>
           <button className="start-stop-Btn" onClick={startRecording} disabled={isRecording}>
-            Start Recording
+            녹화 시작
           </button>
           <button className="start-stop-Btn" onClick={stopRecording} disabled={!isRecording}>
-            Stop Recording
+            녹화 종료
           </button>
           <br />
         </div>
