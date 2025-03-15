@@ -30,21 +30,26 @@ function QuestionSecond() {
   // 추가질문 받아오기 +퀘스천아이디 받아오기
   useEffect(() => {
     const getTailQuestion = async () => {
-        try {
-            const tail = await api.get(`/interview/random/${firstInterviewId}/question/tail`);
-            console.log(tail.data.data);
-            
-            if (tail.data.data.success) {
-              setTailQuestion(tail.data.data.questionData);
-              const secondQuestionId = tail.data.data.questionId;
-              setSecondRandomQuestionId(secondQuestionId);
-            } else {
-              setTimeout(getTailQuestion, 5000); // 5초 후 다시 요청
-            }
-            console.log(tailQuestion);
-        } catch (error) {
-            console.error('꼬리질문 가져오는 중 오류 발생:', error);
-        }
+      try {
+          const tail = await api.get(`/interview/random/${firstInterviewId}/question/tail`);
+          console.log(tail.data.data);
+          
+          if (tail.data.data.success) {
+            setTailQuestion(tail.data.data.questionData);
+
+            const secondQuestionId = tail.data.data.questionId;
+            setSecondRandomQuestionId(secondQuestionId);
+
+            setTimeout(() => {
+              startRecording();
+            }, 3000);
+          } else {
+            setTimeout(getTailQuestion, 5000); // 5초 후 다시 요청
+          }
+          console.log(tailQuestion);
+      } catch (error) {
+          console.error('꼬리질문 가져오는 중 오류 발생:', error);
+      }
     };
 
     getTailQuestion();
