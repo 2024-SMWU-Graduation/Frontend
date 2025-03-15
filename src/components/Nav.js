@@ -21,6 +21,26 @@ function NavigateBar() {
     }
   }
 
+  const handleIntroduce = async() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if(accessToken) {
+      navigate("/introduce");
+    }
+    else {
+      navigate("/login");
+    }
+  }
+
+  const handleQuestion = async() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if(accessToken) {
+      navigate("/question");
+    }
+    else {
+      navigate("/login");
+    }
+  }
+
   console.log(state.isLoggedIn)
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -29,8 +49,8 @@ function NavigateBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/introduce">1분 자기소개</Nav.Link>
-            <Nav.Link href="/question">직무별 질문</Nav.Link>
+            <Nav.Link onClick={handleIntroduce}>1분 자기소개</Nav.Link>
+            <Nav.Link onClick={handleQuestion}>직무별 질문</Nav.Link>
             {state.isLoggedIn ? (
                 <>
                   <Nav.Link href="/mypage">마이페이지</Nav.Link>
