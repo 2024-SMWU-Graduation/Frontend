@@ -41,19 +41,19 @@ function HomePage() {
           <div className='features-container'>
             <div className='feature'>
               <h4>AI 기반 분석</h4>
-              <p>면접자의 표정, 음성, 답변을 AI가 종합적으로 분석하여 피드백 제공</p>
+              <p>면접자의 표정, 음성, 답변을 <br/>AI가 종합적으로 분석하여 피드백 제공</p>
               <img src={aiAnalysisImage} alt='AI 기반 분석' className='feature-image' />
             </div>
             <div className='feature'>
               <h4>직무별 맞춤 질문</h4>
-              <p>희망 직군에 맞춰 최적화된 AI 면접 질문 제공</p>
+              <p>희망 직군에 맞춰 <br/>최적화된 AI 면접 질문 제공</p>
               <img src={customQuestionsImage0} alt='직무별 맞춤 질문1' className='feature-image' />
               <img src={customQuestionsImage1} alt='직무별 맞춤 질문2' className='feature-image' />
               <img src={customQuestionsImage2} alt='직무별 맞춤 질문3' className='feature-image' />
             </div>
             <div className='feature'>
               <h4>실시간 피드백</h4>
-              <p>즉각적인 피드백으로 면접 스킬을 빠르게 향상</p>
+              <p>즉각적인 피드백으로 <br/>면접 스킬을 빠르게 향상</p>
               <img src={realtimeFeedbackImage} alt='실시간 피드백' className='feature-image' />
             </div>
           </div>
