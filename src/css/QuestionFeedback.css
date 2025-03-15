@@ -26,6 +26,5 @@
   }
 
   .next-video-btn:hover {
-    background: linear-gradient(90deg, #ff758c, #ff7eb3);
     transform: translateX(5px);
   }

@@ -184,6 +184,7 @@ function QuestionSecond() {
             </div>
           )}
         <br/>
+        <br/>
         <div className='question-warning-text'>
           질문이 제시되면 3초 후 녹화가 시작됩니다. 답변을 준비해주세요.
           <br/>

@@ -162,6 +162,7 @@ function Introduce() {
         <div className='introduce-warning-text'>
           얼굴이 화면 중앙에 올 수 있도록 조정해주세요.
         </div>
+        <br/>
         <h2>
           {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
