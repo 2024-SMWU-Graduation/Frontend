@@ -30,21 +30,26 @@ function QuestionSecond() {
   // 추가질문 받아오기 +퀘스천아이디 받아오기
   useEffect(() => {
     const getTailQuestion = async () => {
-        try {
-            const tail = await api.get(`/interview/random/${firstInterviewId}/question/tail`);
-            console.log(tail.data.data);
-            
-            if (tail.data.data.success) {
-              setTailQuestion(tail.data.data.questionData);
-              const secondQuestionId = tail.data.data.questionId;
-              setSecondRandomQuestionId(secondQuestionId);
-            } else {
-              setTimeout(getTailQuestion, 5000); // 5초 후 다시 요청
-            }
-            console.log(tailQuestion);
-        } catch (error) {
-            console.error('꼬리질문 가져오는 중 오류 발생:', error);
-        }
+      try {
+          const tail = await api.get(`/interview/random/${firstInterviewId}/question/tail`);
+          console.log(tail.data.data);
+          
+          if (tail.data.data.success) {
+            setTailQuestion(tail.data.data.questionData);
+
+            const secondQuestionId = tail.data.data.questionId;
+            setSecondRandomQuestionId(secondQuestionId);
+
+            setTimeout(() => {
+              startRecording();
+            }, 3000);
+          } else {
+            setTimeout(getTailQuestion, 5000); // 5초 후 다시 요청
+          }
+          console.log(tailQuestion);
+      } catch (error) {
+          console.error('꼬리질문 가져오는 중 오류 발생:', error);
+      }
     };
 
     getTailQuestion();
@@ -178,7 +183,13 @@ function QuestionSecond() {
               <Loading/>
             </div>
           )}
+        <br/>
+        <div className='question-warning-text'>
+          질문이 제시되면 3초 후 녹화가 시작됩니다. 답변을 준비해주세요.
           <br/>
+          얼굴이 화면 중앙에 올 수 있도록 조정해주세요.
+        </div>
+        <br/>
         </h2>
         <div className='record-warning'>
           {isRecordingText}
@@ -199,10 +210,10 @@ function QuestionSecond() {
 
         <div className='video'>
           <button className="start-stop-Btn" onClick={startRecording} disabled={isRecording}>
-            Start Recording
+            녹화 시작
           </button>
           <button className="start-stop-Btn" onClick={stopRecording} disabled={!isRecording}>
-            Stop Recording
+            녹화 종료
           </button>
           <br />
         </div>

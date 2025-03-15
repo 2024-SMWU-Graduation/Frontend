@@ -185,11 +185,13 @@ function Question() {
         <h2 className='intro'>
           아래 직무별 버튼 중 한가지를 클릭하여 질문을 확인하세요.
         </h2>
-        <div className='question-wargning-text'>
+        <div className='question-warning-text'>
           질문이 제시되면 3초 후 녹화가 시작됩니다. 답변을 준비해주세요.
+          <br/>
+          얼굴이 화면 중앙에 올 수 있도록 조정해주세요.
         </div>
         <br/>
-        <div className='catergory-buttons'>
+        <div className='category-buttons'>
           {!selectedCategory && CategoryData.map((category, index) => (
             <button
               key={index}
@@ -222,10 +224,10 @@ function Question() {
 
         <div className='video'>
           <button className="start-stop-Btn" onClick={startRecording} disabled={isRecording}>
-            Start Recording
+            녹화 시작
           </button>
           <button className="start-stop-Btn" onClick={stopRecording} disabled={!isRecording}>
-            Stop Recording
+            녹화 종료
           </button>
           <br />
         </div>

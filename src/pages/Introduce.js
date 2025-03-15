@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { api } from "../axios"
-import {formatPercentage} from "../utils/FormatUtils";
 import Loading from '../components/Loading';
 
 function Introduce() {
@@ -159,7 +158,11 @@ function Introduce() {
         <h2 className='intro'>
           카메라를 켜고 1분간 자기소개를 녹화해주세요
           <br/>
-          <br/>
+        </h2>
+        <div className='introduce-warning-text'>
+          얼굴이 화면 중앙에 올 수 있도록 조정해주세요.
+        </div>
+        <h2>
           {padTime(Math.floor(timeLeft / 60))}:{padTime(timeLeft % 60)}
         </h2>
 
@@ -178,10 +181,10 @@ function Introduce() {
 
         <div className='video'>
           <button className="start-stop-Btn" onClick={startRecording} disabled={isRecording}>
-            Start Recording
+            녹화 시작
           </button>
           <button className="start-stop-Btn" onClick={stopRecording} disabled={!isRecording}>
-            Stop Recording
+            녹화 종료
           </button>
           <br />
         </div>

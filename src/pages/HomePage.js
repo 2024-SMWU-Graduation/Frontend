@@ -11,10 +11,15 @@ import realtimeFeedbackImage from '../../src/assets/images/feedback.png';
 
 function HomePage() {
   const navigate = useNavigate();
-  const getStart = async () => {
-    navigate('/introduce');
-  };
-
+  const getStart = async() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if(accessToken) {
+      navigate("/introduce");
+    }
+    else {
+      navigate("/login");
+    }
+  }
   return (
     <div className='home-background'>
       <div className='main-container'>
