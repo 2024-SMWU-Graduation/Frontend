@@ -54,7 +54,7 @@ function QuestionList() {
     if (!window.confirm("동영상을 삭제하시겠습니까?")) return; // 사용자 확인
 
     try {
-        await api.delete(`/interview/introduce/${id}`); // DELETE 요청
+        await api.delete(`/interview/random/${id}`); // DELETE 요청
         // 화면에 즉시 반영
         setVideos((prevVideos) => prevVideos.filter((video) => video.interviewId !== id));
     } catch (error) {
