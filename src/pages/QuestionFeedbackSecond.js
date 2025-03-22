@@ -90,10 +90,12 @@ function QuestionFeedbackSecond() {
 
         //console.log("✅ AI 분석 결과 데이터:", jsonData);
         setAnalyzeData(jsonData);
+
         // 질문 텍스트 +기호 파싱
-        const questionText = analyzeData.question;
-        const formattedText = questionText.replace(/\+/g, " "); // +를 공백으로 변환
-        setQuestionTextEdit(formattedText);
+        if (jsonData.question) {
+          const formattedText = jsonData.question.replace(/\+/g, " ");
+          setQuestionTextEdit(formattedText);
+        }
       } catch (error) {
         console.error("❌ AI 분석 데이터를 불러오는 중 오류 발생:", error);
       }
