@@ -210,7 +210,7 @@ function QuestionFeedbackSecond() {
                   </p>
                   {analyzeData?.answer ? (
                     <div>
-                      <div className="feedback-script-title">✏️ 원본 대본</div>
+                      <div className="feedback-script-title">❓ 꼬리 질문</div>
                       <p>{questionTextEdit}</p>
                       <div className="feedback-script-title">✏️ 답변</div>
                       <p>{analyzeData.answer}</p>

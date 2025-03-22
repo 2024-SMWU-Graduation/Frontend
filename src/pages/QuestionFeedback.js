@@ -90,7 +90,9 @@ function QuestionFeedback() {
         setAnalyzeData(jsonData);
         // 질문 텍스트 +기호 파싱
         const questionText = analyzeData.question;
+        console.log("questionText : " + questionText);
         const formattedText = questionText.replace(/\+/g, " "); // +를 공백으로 변환
+        console.log("formattedText : " + formattedText);
         setQuestionTextEdit(formattedText);
       } catch (error) {
         console.error("❌ AI 분석 데이터를 불러오는 중 오류 발생:", error);
@@ -208,7 +210,7 @@ function QuestionFeedback() {
                   </p>
                   {analyzeData?.answer ? (
                     <div>
-                      <div className="feedback-script-title">✏️ 질문</div>
+                      <div className="feedback-script-title">❓ 질문</div>
                       <p>{questionTextEdit}</p>
                       <div className="feedback-script-title">✏️ 답변</div>
                       <p>{analyzeData.answer}</p>
