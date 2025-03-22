@@ -1,9 +1,9 @@
-import '../css/QuestionFeedback.css'
-import { api } from "../axios"
+import "../css/QuestionFeedback.css";
+import { api } from "../axios";
 import React, { useRef, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import parseQuestionFeedback from '../utils/ParseQuestionFeedback';
-import Loading from '../components/Loading';
+import parseQuestionFeedback from "../utils/ParseQuestionFeedback";
+import Loading from "../components/Loading";
 
 function QuestionFeedback() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function QuestionFeedback() {
   const videoRef = useRef(null); //video 태그 제어
   const [analyzeData, setAnalyzeData] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
-  const [fetching, setFetching] = useState(true);  // 백엔드 요청 여부 추적 상태
+  const [fetching, setFetching] = useState(true); // 백엔드 요청 여부 추적 상태
 
   // 첫번째 영상
   const [videoFirst, setVideoFirst] = useState(null);
@@ -25,14 +25,15 @@ function QuestionFeedback() {
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const response = await api.get(`/feedback/random`, {params: {interviewId: id}} );
-        console.log("API 응답:", response); // 전체 응답 확인
-  
+        const response = await api.get(`/feedback/random`, {
+          params: { interviewId: id },
+        });
+
         if (response.data && response.data.data) {
           const feedbackList = response.data.data.feedbackList;
-          const firstFeedback = feedbackList[0];  // 첫 번째 피드백
+          const firstFeedback = feedbackList[0]; // 첫 번째 피드백
 
-          // 첫번째 피드백 
+          // 첫번째 피드백
           setVideoFirst(firstFeedback);
           setFirstAnalyzeUrl(firstFeedback.analyzeUrl);
           setFirstVideoUrl(firstFeedback.videoUrl);
@@ -41,7 +42,7 @@ function QuestionFeedback() {
 
           // analyzeUrl가 null이 아니면 요청을 멈추도록 설정
           if (FirstAnalyzeUrl) {
-            setFetching(false);  // analyzeUrl가 올바르게 설정되면 요청 중지
+            setFetching(false); // analyzeUrl가 올바르게 설정되면 요청 중지
           }
         } else {
           console.error("API 응답이 예상한 형식이 아닙니다:", response.data);
@@ -50,9 +51,9 @@ function QuestionFeedback() {
         console.error("데이터를 가져오는 중 오류 발생:", error);
       }
     };
-    
+
     fetchFeedback();
-    
+
     // 5초마다 백엔드에 요청을 보내 analyzeUrl가 변경되었는지 체크 (polling)
     const interval = setInterval(() => {
       if (fetching) {
@@ -78,10 +79,11 @@ function QuestionFeedback() {
     const fetchAnalyzeData = async () => {
       try {
         const response = await fetch(FirstAnalyzeUrl);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-  
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+
         const jsonData = await response.json();
-        console.log("✅ AI 분석 결과 데이터:", jsonData);
+        //console.log("✅ AI 분석 결과 데이터:", jsonData);
         setAnalyzeData(jsonData);
       } catch (error) {
         console.error("❌ AI 분석 데이터를 불러오는 중 오류 발생:", error);
@@ -89,15 +91,14 @@ function QuestionFeedback() {
     };
     fetchAnalyzeData();
   }, [FirstAnalyzeUrl]);
-  
 
   // 부정-긍정 판단
   const analyzePercentage = (percentage) => {
-      if (percentage >= 40) {
-          return "부정적인 표정을 많이 지으셨네요 😥"
-      } else {
-          return "인터뷰 내내 긍정적인 미소를 유지했어요 🙂"
-      }
+    if (percentage >= 40) {
+      return "부정적인 표정을 많이 지으셨네요 😥";
+    } else {
+      return "인터뷰 내내 긍정적인 미소를 유지했어요 🙂";
+    }
   };
 
   // 타임라인 렌더링
@@ -135,12 +136,12 @@ function QuestionFeedback() {
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = parseFloat(time); //동영샹 재생 시간 설정 (숫자로 변환)
-      
+
       const onSeeked = () => {
         videoRef.current.play();
         videoRef.current.removeEventListener("seeked", onSeeked); // 이벤트 제거
       };
-      
+
       videoRef.current.addEventListener("seeked", onSeeked);
     }
   };
@@ -148,7 +149,7 @@ function QuestionFeedback() {
   // 두번째 영상 피드백 페이지로 이동
   const goToSecondVideo = (id) => {
     navigate(`/question-feedback-second`, {
-      state : { id },
+      state: { id },
     });
   };
 
@@ -157,12 +158,27 @@ function QuestionFeedback() {
       {videoFirst ? (
         <div className="content">
           <div className="videoArea">
-            <video ref={videoRef} src={FirstVideoUrl} controls preload="auto"></video>
+            <video
+              ref={videoRef}
+              src={FirstVideoUrl}
+              controls
+              preload="auto"
+            ></video>
           </div>
           <div className="feedbackArea">
-            <div className='tabs'>
-              <button className={activeTab === 0 ? "active" : ""} onClick={() => setActiveTab(0)}>표정 분석</button>
-              <button className={activeTab === 1 ? "active" : ""} onClick={() => setActiveTab(1)}>AI 답변 분석</button>
+            <div className="tabs">
+              <button
+                className={activeTab === 0 ? "active" : ""}
+                onClick={() => setActiveTab(0)}
+              >
+                표정 분석
+              </button>
+              <button
+                className={activeTab === 1 ? "active" : ""}
+                onClick={() => setActiveTab(1)}
+              >
+                AI 답변 분석
+              </button>
             </div>
             <h3>인터뷰 분석 완료!</h3>
             <div className="tabContent">
@@ -180,7 +196,9 @@ function QuestionFeedback() {
               )}
               {activeTab === 1 && (
                 <>
-                  <p className="mainFeedbackText">[AI 답변 분석 피드백 확인하기]</p>
+                  <p className="mainFeedbackText">
+                    [AI 답변 분석 피드백 확인하기]
+                  </p>
                   {analyzeData?.answer ? (
                     <div>
                       <div className="feedback-script-title">✏️ 질문</div>
@@ -192,7 +210,7 @@ function QuestionFeedback() {
                   ) : (
                     <div>
                       <p>데이터를 불러오는 중입니다...</p>
-                      <Loading/>
+                      <Loading />
                     </div>
                   )}
                 </>
@@ -205,10 +223,12 @@ function QuestionFeedback() {
       )}
 
       <div className="next-video-container">
-        <button className="next-video-btn" onClick={() => goToSecondVideo(id)}>두번째 영상으로 이동 →</button>
+        <button className="next-video-btn" onClick={() => goToSecondVideo(id)}>
+          두번째 영상으로 이동 →
+        </button>
       </div>
     </div>
   );
-};
+}
 
 export default QuestionFeedback;
