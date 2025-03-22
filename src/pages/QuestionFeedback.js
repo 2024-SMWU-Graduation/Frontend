@@ -153,6 +153,9 @@ function QuestionFeedback() {
     });
   };
 
+  const questionText = analyzeData.question;
+  const questionTextEdit = questionText.replace(/\+/g, " ");
+
   return (
     <div>
       {videoFirst ? (
@@ -202,7 +205,7 @@ function QuestionFeedback() {
                   {analyzeData?.answer ? (
                     <div>
                       <div className="feedback-script-title">✏️ 질문</div>
-                      <p>{analyzeData.question}</p>
+                      <p>{questionTextEdit}</p>
                       <div className="feedback-script-title">✏️ 답변</div>
                       <p>{analyzeData.answer}</p>
                       {parseQuestionFeedback(analyzeData)}
