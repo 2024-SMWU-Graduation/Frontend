@@ -21,6 +21,9 @@ function QuestionFeedback() {
   const [FirstNegativePercentage, setFirstNegativePercentage] = useState(null);
   const [FirstTimelines, setFirstTimelines] = useState([]);
 
+  // 질문 텍스트 받아오기
+  const [questionTextEdit, setQuestionTextEdit] = useState("");
+
   // 백에서 영상 url, 표정분석 결과 url 받기
   useEffect(() => {
     const fetchFeedback = async () => {
@@ -81,10 +84,14 @@ function QuestionFeedback() {
         const response = await fetch(FirstAnalyzeUrl);
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
-
         const jsonData = await response.json();
+
         //console.log("✅ AI 분석 결과 데이터:", jsonData);
         setAnalyzeData(jsonData);
+        // 질문 텍스트 +기호 파싱
+        const questionText = analyzeData.question;
+        const formattedText = questionText.replace(/\+/g, " "); // +를 공백으로 변환
+        setQuestionTextEdit(formattedText);
       } catch (error) {
         console.error("❌ AI 분석 데이터를 불러오는 중 오류 발생:", error);
       }
@@ -152,9 +159,6 @@ function QuestionFeedback() {
       state: { id },
     });
   };
-
-  const questionText = analyzeData.question;
-  const questionTextEdit = questionText.replace(/\+/g, " ");
 
   return (
     <div>
